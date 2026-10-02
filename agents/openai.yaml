@@ -1,0 +1,4 @@
+interface:
+  display_name: "SecurePR"
+  short_description: "Evidence-first security review for code and PRs"
+  default_prompt: "Use $securepr to review this code for evidenced security issues."

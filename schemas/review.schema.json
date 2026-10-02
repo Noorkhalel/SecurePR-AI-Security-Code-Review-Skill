@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SecurePR static review v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "mode",
+    "revision",
+    "scope",
+    "summary",
+    "findings",
+    "manual_review",
+    "coverage_gaps",
+    "recommendation"
+  ],
+  "properties": {
+    "version": {
+      "const": "1.0.0"
+    },
+    "mode": {
+      "enum": [
+        "pr",
+        "full",
+        "snippet"
+      ]
+    },
+    "revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 20000
+      },
+      "maxItems": 200,
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "severity_rationale",
+          "confidence_rationale",
+          "source",
+          "sink",
+          "missing_control",
+          "attack_scenario",
+          "impact",
+          "remediation",
+          "regression_test",
+          "id",
+          "severity",
+          "confidence",
+          "basis",
+          "cwe",
+          "owasp",
+          "function",
+          "introduced_by",
+          "evidence",
+          "data_flow",
+          "controls_checked",
+          "preconditions",
+          "context_required"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "severity_rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "confidence_rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "sink": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "missing_control": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "attack_scenario": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "impact": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "remediation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "regression_test": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^(CRITICAL|HIGH|MEDIUM|LOW|INFO)-[0-9]{2,4}$"
+          },
+          "severity": {
+            "enum": [
+              "Critical",
+              "High",
+              "Medium",
+              "Low",
+              "Informational"
+            ]
+          },
+          "confidence": {
+            "enum": [
+              "CONFIRMED",
+              "HIGH CONFIDENCE"
+            ]
+          },
+          "basis": {
+            "const": "static"
+          },
+          "cwe": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^CWE-[1-9][0-9]{0,4}$"
+              }
+            ]
+          },
+          "owasp": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "function": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "introduced_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "file",
+                "line_start",
+                "line_end",
+                "sha256",
+                "quote"
+              ],
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                },
+                "line_start": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "line_end": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "quote": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "data_flow": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 200,
+            "minItems": 1
+          },
+          "controls_checked": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 200,
+            "minItems": 1
+          },
+          "preconditions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 200,
+            "minItems": 1
+          },
+          "context_required": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 200
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "confidence": {
+                  "const": "CONFIRMED"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "context_required": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "context_required": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "manual_review": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "confidence",
+          "reason",
+          "context_required"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "confidence": {
+            "enum": [
+              "MEDIUM CONFIDENCE",
+              "LOW CONFIDENCE / NEEDS MANUAL REVIEW"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "context_required": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 200,
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "coverage_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 20000
+      },
+      "maxItems": 200
+    },
+    "recommendation": {
+      "enum": [
+        null,
+        "No security blocker identified",
+        "Security issue should be reviewed before merge",
+        "Confirmed security issue should be fixed before merge"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "pr"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "recommendation": {
+            "type": "string"
+          },
+          "findings": {
+            "items": {
+              "properties": {
+                "introduced_by": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                }
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "recommendation": {
+            "type": "null"
+          },
+          "findings": {
+            "items": {
+              "properties": {
+                "introduced_by": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

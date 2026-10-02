@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.coverage
+coverage.xml
+.venv/
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+local-results/

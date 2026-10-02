@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "mode": "full",
+  "revision": "synthetic fixture; source SHA-256 recorded per citation",
+  "scope": [
+    "tests/vulnerable/object-owner/app.js",
+    "tests/vulnerable/object-owner/CONTEXT.md"
+  ],
+  "summary": "One statically confirmed object-authorization issue in the supplied complete synthetic handler and contract.",
+  "findings": [
+    {
+      "id": "HIGH-01",
+      "title": "Invoice lookup omits owner authorization",
+      "severity": "High",
+      "severity_rationale": "Authenticated users can retrieve other owners private invoices when their IDs are known. Scope is this invoice endpoint, not all application data.",
+      "confidence": "CONFIRMED",
+      "confidence_rationale": "The supplied code and explicit contract establish caller control, authentication-only middleware, private ownership and absence of hidden database policy.",
+      "basis": "static",
+      "cwe": "CWE-639",
+      "owasp": "API1:2023 Broken Object Level Authorization",
+      "function": "register (GET handler callback)",
+      "evidence": [
+        {
+          "file": "tests/vulnerable/object-owner/app.js",
+          "sha256": "968f813776f47a790184a255d7f0b5a278924c71e0a46fccf5be4b934585c9d7",
+          "line_start": 2,
+          "line_end": 5,
+          "quote": "  app.get('/invoices/:id', requireSession, async (req, res) => {\n    const invoice = await db.invoice.findUnique({ where: { id: req.params.id } });\n    if (!invoice) return res.status(404).end();\n    res.json(invoice);"
+        },
+        {
+          "file": "tests/vulnerable/object-owner/CONTEXT.md",
+          "sha256": "f0eecc7809ef2f4c3dd2eca12cedbeda163dbef818ebc748e63bf98010b912f2",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "requireSession verifies a session and sets req.user={id,tenantId,role}; it only authenticates. db is an ordinary Prisma client with no extensions or row security. Invoices are private to ownerId. Users can know invoice IDs belonging to others."
+        }
+      ],
+      "source": "Authenticated caller controls req.params.id.",
+      "data_flow": [
+        "req.params.id -> db.invoice.findUnique where.id",
+        "Returned invoice -> res.json(invoice)"
+      ],
+      "sink": "Private invoice lookup and JSON response.",
+      "missing_control": "The lookup does not scope ownerId to the verified req.user.id.",
+      "controls_checked": [
+        "requireSession authenticates according to the supplied contract; it does not authorize invoices.",
+        "The db contract excludes Prisma extensions and row security.",
+        "The not-found branch checks existence, not ownership."
+      ],
+      "preconditions": [
+        "Caller has a valid ordinary session.",
+        "Caller knows an invoice ID owned by another user, as permitted by the supplied contract."
+      ],
+      "attack_scenario": "A signed-in caller selects another owners invoice ID and receives that private record.",
+      "impact": "Cross-owner disclosure of invoice data through the reviewed route.",
+      "remediation": "Use a query that includes the requested id and verified ownerId, preserving the stated private-owner policy. Return the same not-found response when no authorized record matches.",
+      "regression_test": "Proposed: an owner receives their invoice; a different owner with a valid session receives no invoice; nonexistent IDs return 404. Use synthetic accounts and assert response fields and unchanged records.",
+      "context_required": [],
+      "introduced_by": null
+    }
+  ],
+  "manual_review": [],
+  "coverage_gaps": [
+    "Synthetic single-route scope; no production repository, deployment or complete framework integration was reviewed."
+  ],
+  "recommendation": null
+}

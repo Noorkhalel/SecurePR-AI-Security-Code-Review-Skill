@@ -1,0 +1,415 @@
+{
+  "run": {
+    "id": "blind-r1",
+    "kind": "blinded-agent",
+    "reviewer": "Three fresh-context reviewer agents; same inherited model as build session; provider model/version not exposed",
+    "skill_revision": "SKILL.md sha256:05e0669eef5638b88ffd4b76595d29dfe331db6d240803ae3f938e019ea3e499",
+    "date": "2026-10-02",
+    "notes": "49 disjoint cases; no expected labels or original project read by reviewers. First pass. Synthetic source-review corpus, static reasoning only. No target code execution."
+  },
+  "cases": 49,
+  "true_positives": 25,
+  "false_positives": 0,
+  "true_negatives": 18,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "ambiguous_abstentions": 6,
+  "ambiguous_missing_followup": 0,
+  "details": [
+    {
+      "id": "case-001",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-002",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-003",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-004",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-005",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-006",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-007",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-008",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-009",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-010",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-011",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-012",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-013",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-014",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-015",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-016",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-017",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-018",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-019",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-020",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-021",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-022",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-023",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-024",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-025",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-026",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-027",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-028",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-029",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-030",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-031",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-032",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-033",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-034",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-035",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null
+    },
+    {
+      "id": "case-036",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null
+    },
+    {
+      "id": "case-037",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null
+    },
+    {
+      "id": "case-038",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null
+    },
+    {
+      "id": "case-039",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null
+    },
+    {
+      "id": "case-040",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null
+    },
+    {
+      "id": "case-041",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-042",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-043",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-044",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-045",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-046",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null
+    },
+    {
+      "id": "case-047",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": "Confirmed security issue should be fixed before merge"
+    },
+    {
+      "id": "case-048",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": "No security blocker identified"
+    },
+    {
+      "id": "case-049",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": "No security blocker identified"
+    }
+  ],
+  "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+}

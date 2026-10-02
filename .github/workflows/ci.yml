@@ -1,0 +1,25 @@
+name: Validate SecurePR
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout reviewed project
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, verified 2026-10-02
+        with:
+          persist-credentials: false
+      - name: Python helper and scorer tests
+        run: python3 -I -m unittest discover -s tests/unit -v
+      - name: Project integrity
+        run: python3 -I tools/check_project.py
+      - name: Replay recorded evaluation
+        run: python3 -I tools/evaluate.py evaluation/runs/blind-r1.json
+      - name: Validate example evidence
+        run: python3 -I scripts/securepr.py validate-report . examples/review.json
+      - name: Trusted synthetic fix regression
+        run: node examples/fix-mode/regression.test.mjs

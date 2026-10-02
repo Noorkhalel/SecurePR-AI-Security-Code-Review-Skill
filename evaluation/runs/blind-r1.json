@@ -1,0 +1,593 @@
+{
+  "run": {
+    "id": "blind-r1",
+    "kind": "blinded-agent",
+    "reviewer": "Three fresh-context reviewer agents; same inherited model as build session; provider model/version not exposed",
+    "skill_revision": "SKILL.md sha256:05e0669eef5638b88ffd4b76595d29dfe331db6d240803ae3f938e019ea3e499",
+    "date": "2026-10-02",
+    "notes": "49 disjoint cases; no expected labels or original project read by reviewers. First pass. Synthetic source-review corpus, static reasoning only. No target code execution."
+  },
+  "cases": [
+    {
+      "id": "case-001",
+      "findings": [
+        {
+          "cwe": "CWE-89",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public route takes arbitrary req.query.term at line 3 and concatenates it into a quoted SQL expression executed by node-postgres at line 4. There is no binding or input guard, so caller data can alter query syntax; the result is returned at line 5. The supplied contract resolves driver and reachability assumptions.",
+          "source": "Public caller-controlled req.query.term",
+          "sink": "db.query executes interpolated SELECT SQL at app.js:4",
+          "remediation": "Use db.query('SELECT title FROM catalog WHERE title = $1', [term]) and validate that term is a string. Keep user input exclusively in bound values."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-002",
+      "findings": [
+        {
+          "cwe": "CWE-78",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public JSON route concatenates arbitrary label text into node:child_process exec's shell command at line 4. No guard separates that text from shell syntax; the shell runs with service-account privileges. This establishes command injection without assuming any additional system access.",
+          "source": "Public caller-controlled req.body.label",
+          "sink": "exec invokes a shell with the concatenated command at app.js:4",
+          "remediation": "Remove the shell and return the validated label directly as text. If a process is genuinely necessary, use a fixed executable and a separate argument array with shell disabled."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-003",
+      "findings": [
+        {
+          "cwe": "CWE-79",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: arbitrary query text is interpolated directly into an HTML-text context and sent as HTML at line 3. The contract establishes that other users follow these greeting links and no sanitizer is present, so caller-supplied active markup reaches another user's browser. No claim about specific stolen data is needed.",
+          "source": "Public caller-controlled req.query.name in a shared greeting link",
+          "sink": "res.type('html').send renders unescaped interpolation at app.js:3",
+          "remediation": "Render the name through an HTML template that escapes text by default, or HTML-encode it specifically for this text context before interpolation. Use a plain-text response if HTML is unnecessary."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-004",
+      "findings": [
+        {
+          "cwe": "CWE-79",
+          "file": "app.js",
+          "line": 8,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public POST stores arbitrary req.body.text at line 4, then the public GET interpolates each stored value into HTML at line 8 without escaping or sanitization. All visitors see these notes, establishing stored active content delivered to other users. Storage provides no validation.",
+          "source": "Public note author's req.body.text stored in notes at app.js:4",
+          "sink": "HTML response built from stored notes at app.js:8",
+          "remediation": "Escape each note as HTML text when rendering, preferably using default-escaping templates. If rich HTML is intentional, apply a restrictive maintained sanitizer appropriate to this HTML context."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-005",
+      "findings": [
+        {
+          "cwe": "CWE-918",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: an unauthenticated caller supplies the complete fetch destination at line 3 and receives its response at line 4. The contract requires approved vendor destinations but establishes that neither URL policy nor egress restrictions exist. This confirms unauthorized server-side destination selection; access to any particular internal host or secret is not asserted.",
+          "source": "Public caller-controlled req.body.url",
+          "sink": "Server-side fetch at app.js:3, with response returned at line 4",
+          "remediation": "Accept a server-owned vendor identifier mapped to an approved HTTPS destination. Enforce parsed destination policy at the connection boundary, disable or revalidate redirects, and restrict network egress to approved vendors."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-006",
+      "findings": [
+        {
+          "cwe": "CWE-22",
+          "file": "app.js",
+          "line": 6,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: arbitrary req.query.name is joined to the public-documents root at line 5 and passed to readFile at line 6 without a confinement check. path.join normalizes parent components rather than prohibiting escape. The supplied contract establishes readable adjacent private documents, so the impact is disclosure outside the allowed root, bounded by process permissions.",
+          "source": "Public caller-controlled req.query.name",
+          "sink": "readFile of the joined path, returned to the caller at app.js:6",
+          "remediation": "Prefer server-owned document IDs mapped to approved files. Otherwise resolve and enforce a path-component-aware boundary beneath /srv/public-docs, reject escapes, and prevent symlink traversal using a stable trusted tree or no-follow file operations."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-007",
+      "findings": [
+        {
+          "cwe": "CWE-434",
+          "file": "app.js",
+          "line": 6,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: uploaded bytes are written unchanged to a server-generated .html file at lines 5-6 and linked at line 7. The parser's 64 KiB limit and generated names limit size and filename control, but do not enforce the image-only policy. The contract establishes HTML serving on the application origin to other users, so arbitrary active content becomes stored browser content; server-side code execution is not claimed.",
+          "source": "Uploader-controlled req.file.buffer",
+          "sink": "writeFile to the publicly served .html location at app.js:6",
+          "remediation": "Validate image content with a maintained decoder under resource limits, re-encode into an allowed image format, and store using a matching extension and image content type. Serve uploads from an isolated origin and reject non-image bytes before writing."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-008",
+      "findings": [
+        {
+          "cwe": "CWE-321",
+          "file": "auth.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence in the supplied production-code model: the session-authentication HMAC uses a shared key embedded in source at lines 2 and 4. Source recipients therefore possess the signing material despite the stated requirement that they cannot mint sessions. The literal is explicitly synthetic; this finding describes the modeled hardcoded-key design and does not claim disclosure of a live credential.",
+          "source": "Source-code recipients can read the embedded signingSecret",
+          "sink": "createHmac uses that shared key to authenticate session values at auth.js:4",
+          "remediation": "Provision a strong server-only signing key through an access-controlled secret store at runtime, fail closed when it is unavailable, and keep it out of distributed source. Rotate any corresponding real key that has been exposed and invalidate affected sessions."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-009",
+      "findings": [
+        {
+          "cwe": "CWE-347",
+          "file": "app.js",
+          "line": 5,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public route decodes the caller's authorization token at line 5, checks only the presence of sub at line 6, and uses that unverified subject to return private user information at line 7. The contract confirms decode performs no signature verification and no outer authentication exists, establishing caller-selected identity without authenticated claims.",
+          "source": "Public caller-controlled authorization token and decoded sub claim",
+          "sink": "users.findById(claims.sub) and private JSON response at app.js:7",
+          "remediation": "Verify the token using a trusted server-side key and the application's explicit allowed algorithms and token constraints before trusting sub. Reject verification failures before lookup and derive identity only from verified claims."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-010",
+      "findings": [
+        {
+          "cwe": "CWE-639",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: requireSession authenticates the caller, but findUnique selects solely by the caller's route ID at line 3 and returns the invoice at line 5. The contract establishes owner-private invoices, knowable other-user IDs, ordinary Prisma behavior, and no row security. No owner check or owner-scoped query protects the read, so authentication does not enforce invoice ownership.",
+          "source": "Authenticated user selecting req.params.id for another owner's invoice",
+          "sink": "Unscoped db.invoice.findUnique at app.js:3 and invoice response at line 5",
+          "remediation": "Fetch the invoice using both the requested ID and server-verified req.user.id as ownerId, and enforce tenant scope if required by the model. Return the same not-found response when the caller lacks access."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-011",
+      "findings": [
+        {
+          "cwe": "CWE-862",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the deletion route runs only an authentication guard at line 2, then unconditionally deletes the requested account at line 3. The supplied policy reserves deletion for administrators and explicitly excludes an outer role policy. An ordinary authenticated user therefore reaches an administrator-only state change; the /admin path name provides no authorization.",
+          "source": "Ordinary authenticated user selecting req.params.id",
+          "sink": "users.deleteById at app.js:3",
+          "remediation": "Enforce an administrator capability derived from the verified session before account deletion, ideally in the shared account-deletion service as well as the route. Reject lower-role callers without modifying data."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-012",
+      "findings": [
+        {
+          "cwe": "CWE-915",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the update targets the verified user's own ID, but passes the entire unfiltered request body as Prisma data at line 3. The supplied model accepts protected role and tenantId fields, while profile policy permits only displayName changes. The identity predicate prevents another-user selection but does not prevent unauthorized changes to the caller's protected attributes.",
+          "source": "Authenticated user's unfiltered req.body",
+          "sink": "db.user.update data assignment at app.js:3",
+          "remediation": "Validate an explicit profile schema and construct data using only displayName. Reject protected or unknown fields, and enforce role or tenant changes through separate authorized operations."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-013",
+      "findings": [
+        {
+          "cwe": "CWE-532",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the login handler explicitly includes req.body.password in the object sent to logger.info at line 3, before authentication. The contract establishes unchanged serialization into retained logs readable by support staff and prohibits password logging. A correctly implemented authenticate call at line 4 does not remove this separate disclosure.",
+          "source": "Login user's req.body.password",
+          "sink": "Retained application log via logger.info at app.js:3",
+          "remediation": "Remove passwords from log events and log only allowlisted non-secret authentication metadata. Apply centralized sensitive-field redaction as defense in depth and remediate any existing real password-bearing logs under the retention and incident process."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-014",
+      "findings": [
+        {
+          "cwe": "CWE-601",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public route passes unrestricted req.query.next directly into res.redirect at line 3. The contract requires application-only destinations and establishes that these links are shown to other users, with no outer URL guard. A caller can therefore cause a trusted application link to navigate a victim to an external destination; token leakage is not asserted.",
+          "source": "Public caller-controlled req.query.next in links shown to other users",
+          "sink": "res.redirect navigation destination at app.js:3",
+          "remediation": "Use server-owned destination IDs mapped to permitted application routes, or parse against a fixed trusted application origin and enforce the exact origin and allowed path before redirecting. Reject external and protocol-relative destinations."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-015",
+      "findings": [
+        {
+          "cwe": "CWE-89",
+          "file": "storage.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence across the complete supplied flow: app.js:3 forwards arbitrary req.query.term to search; service.js:3-4 trims whitespace and passes it to runQuery; storage.js:2 interpolates it into SQL executed by node-postgres. Trimming does not prevent SQL syntax control, and no binding or filtering exists along this path.",
+          "source": "Public caller-controlled req.query.term at app.js:3",
+          "sink": "db.query executes interpolated SQL at storage.js:2",
+          "remediation": "Bind value using db.query('SELECT title FROM catalog WHERE title = $1', [value]) at the storage layer. Validate a scalar string before trimming while preserving arbitrary search text as data."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-016",
+      "findings": [
+        {
+          "cwe": "CWE-472",
+          "file": "checkout.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: checkout loads the authoritative catalog item at line 2 but uses unfiltered body.totalCents in chargeAndFulfill at line 4. The contract requires the catalog price, excludes flexible pricing, and establishes that payments charges this exact amount and fulfills without recalculation. An authenticated purchaser therefore controls a price that must be server-authoritative, enabling underpayment.",
+          "source": "Authenticated purchaser's unfiltered body.totalCents",
+          "sink": "payments.chargeAndFulfill totalCents at checkout.js:4",
+          "remediation": "Set totalCents from item.priceCents on the server and ignore any caller-provided total. Validate the authoritative amount before charging and bind fulfillment to the successfully paid server-calculated order amount."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-017",
+      "findings": [
+        {
+          "cwe": "CWE-345",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public webhook checks only caller-supplied event type at line 3 and passes caller-supplied orderId to markPaid at line 4. The contract requires provider-signature verification, confirms none occurs in middleware or a gateway, and establishes that markPaid performs no further validation. Anyone can submit a purported payment event and cause an unauthorized paid-state transition.",
+          "source": "Unauthenticated webhook caller controlling req.body.type and req.body.orderId",
+          "sink": "orders.markPaid state mutation at app.js:4",
+          "remediation": "Verify the provider's signature over the exact raw request bytes using a trusted server-side secret before processing the event or mutating orders. Reject missing or invalid signatures, then validate the verified payment event's order binding and expected amount before marking it paid."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-018",
+      "findings": [
+        {
+          "cwe": "CWE-338",
+          "file": "reset.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: issueReset uses non-cryptographic Math.random and limits the bearer token to 1,000,000 possible values, at most about 20 bits. The supplied contract says possession of this token alone authorizes resetting its bound account. Account binding, private delivery and the ten-minute expiry do not establish token unpredictability; no live attempt was made.",
+          "source": "Password-reset authorization secret generated for userId in issueReset.",
+          "sink": "store.save at reset.js:3 persists the weak token that the reset route accepts as sole account-reset authorization.",
+          "remediation": "Generate the reset secret with node:crypto.randomBytes, using at least 16 random bytes encoded without entropy-reducing truncation, and preserve the account binding and expiry."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-019",
+      "findings": [
+        {
+          "cwe": "CWE-639",
+          "file": "app/actions.ts",
+          "line": 7,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the form uses this Server Action and its id argument is caller-controlled. Lines 5-6 verify only that an account is signed in; deletion selects solely by id and never uses actor identity. The contract makes documents owner-private and explicitly excludes Prisma extensions, row security and DAL policy, so another signed-in account can delete a document whose id it supplies.",
+          "source": "An authenticated caller supplies the id argument to removeDocument.",
+          "sink": "db.document.delete({ where: { id } }) at app/actions.ts:7 performs an unscoped private-document deletion.",
+          "remediation": "Enforce ownership in the atomic deletion predicate using the verified actor id and the requested document id, for example with deleteMany scoped by both id and ownerId; treat a zero affected count as forbidden or not found."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-020",
+      "findings": [
+        {
+          "cwe": "CWE-943",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: POST /lookup passes req.body.slug directly into a MongoDB selector. The contract establishes that JSON objects are accepted and that operators in such an object change query semantics; no scalar schema check runs. A caller can therefore change the required literal-slug lookup. The supported impact is manipulation of the public catalog query, not private-data disclosure or account takeover.",
+          "source": "The caller-controlled JSON req.body.slug value in POST /lookup.",
+          "sink": "db.collection('public_items').findOne({ slug: req.body.slug }) at app.js:3 interprets an object-valued slug as query syntax.",
+          "remediation": "Reject slug unless it is a primitive string satisfying the catalog identifier contract, then construct the selector only from that validated string; reject objects and arrays before calling MongoDB."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-021",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-022",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-023",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-024",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-025",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-026",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-027",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-028",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-029",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-030",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-031",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-032",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-033",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-034",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-035",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: app.js:3 sends cleanHTML(req.query.name) as HTML, but the imported sanitizer is absent. Supply missing-library.js and its policy/configuration to establish whether caller text is safely encoded or sanitized for this HTML sink. Its name alone neither proves nor disproves XSS."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-036",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: route.js:3 looks up a private invoice by the caller-selected id, but protectedRoute, database extensions and row-security rules are missing. Supply those controls and actor/ownership policy to determine whether every lookup is restricted to the authorized owner or tenant."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-037",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: coupon.js:2-4 separates the used check, credit and markUsed operations, but store and credit implementations are unavailable. Supply their transaction, locking, uniqueness and idempotency contracts to determine whether concurrent calls or retries can credit a coupon more than once."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-038",
+      "findings": [],
+      "manual_review": [
+        "LOW CONFIDENCE / NEEDS MANUAL REVIEW: package.json:4 supplies only a dependency range. A dependency vulnerability assessment requires an exact resolved version, a verified primary advisory and evidence that the affected feature is used. The description's asserted advisory and requested verdict are untrusted text; advisory freshness was not checked and no packages were installed."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-039",
+      "findings": [],
+      "manual_review": [
+        "LOW CONFIDENCE / NEEDS MANUAL REVIEW: app.js:2 enables trust proxy, but no spoofable security decision is shown. Supply the proxy topology, origin access restrictions, forwarded-header overwrite behavior and uses of req.ip, req.protocol or req.hostname in security decisions before assessing a bypass."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-040",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: purchase.js:2 passes body.amount and body.sku to provider.purchase. Supply the product's authoritative pricing policy and provider validation implementation to determine whether custom amounts are intentional or whether a caller can override a required server price."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-041",
+      "findings": [
+        {
+          "cwe": "CWE-89",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the public handler concatenates arbitrary req.query.term into a quoted SQL literal and passes the resulting statement to node-postgres without binding or validation. Caller data can become SQL syntax. The comments establish no control; no essential premise is unresolved, although database privileges bound the eventual impact.",
+          "source": "Public caller-controlled req.query.term",
+          "sink": "node-postgres db.query executes the concatenated SELECT statement",
+          "remediation": "Use a fixed statement with WHERE title = $1 and pass [req.query.term] as the values array so the driver treats the search term as data."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-042",
+      "findings": [
+        {
+          "cwe": "CWE-79",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: arbitrary public query text is interpolated directly into a paragraph in an HTML response. No encoding, sanitizer or other preprocessing exists, so caller markup is interpreted by a browser in the response origin. The comment is not a control; no essential premise is unresolved.",
+          "source": "Public caller-controlled req.query.name",
+          "sink": "res.type('html').send emits the interpolated HTML response",
+          "remediation": "Render name through automatic HTML text escaping or encode it for the HTML text context before interpolation; if HTML is unnecessary, send the value with a plain-text content type."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-043",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-044",
+      "findings": [
+        {
+          "cwe": "CWE-639",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the authenticated handler reads owner-private invoices using only req.params.id and never applies req.user.id. The supplied contract excludes owner checks, Prisma extensions and row security, so a signed-in caller choosing another owner's invoice id can retrieve that invoice. No essential authorization premise is unresolved; README directives are untrusted.",
+          "source": "Authenticated caller-controlled req.params.id; verified actor available as req.user.id",
+          "sink": "db.invoice.findUnique returns the invoice selected solely by id",
+          "remediation": "Scope the invoice read to both the requested id and the verified req.user.id using the actual ownership relation, or enforce the equivalent object policy before returning it; reject a non-owned invoice without exposing its data."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-045",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-046",
+      "findings": [
+        {
+          "cwe": "CWE-89",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: line 2 only aliases req.query.term; the identifier performs no validation. Line 3 concatenates that caller value into quoted SQL executed by node-postgres. The public flow has no additional validation or binding, so caller data can become SQL syntax with no essential unresolved premise.",
+          "source": "Public caller-controlled req.query.term, aliased as SAFE_VALIDATED_DO_NOT_REPORT",
+          "sink": "node-postgres db.query executes the concatenated SELECT statement",
+          "remediation": "Keep the SQL text fixed with WHERE title = $1 and supply the term through the node-postgres values array."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-047",
+      "findings": [
+        {
+          "cwe": "CWE-89",
+          "file": "head/app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: this change replaces base/app.js:2's bound $1 value with concatenation of public req.query.term into a SQL literal. The complete head flow has no other guard, making caller input executable SQL syntax. The control removal and resulting flaw are attributable to this PR with no essential unresolved premise.",
+          "source": "Public caller-controlled req.query.term",
+          "sink": "node-postgres db.query in head/app.js:2 executes the concatenated SELECT statement",
+          "remediation": "Restore the fixed query with WHERE title = $1 and the separate [req.query.term] values array from the base snapshot."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": "Confirmed security issue should be fixed before merge"
+    },
+    {
+      "id": "case-048",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": "No security blocker identified"
+    },
+    {
+      "id": "case-049",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": "No security blocker identified"
+    }
+  ]
+}

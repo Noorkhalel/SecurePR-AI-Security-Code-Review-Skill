@@ -1,6 +1,7 @@
 # Primary sources and taxonomy
 
-Documentation checked on 2026-10-02. Recheck version-sensitive behavior when
+Documentation checked on 2026-10-02; authorization mappings, Express middleware and
+Next.js action/data boundaries rechecked on 2026-10-03. Recheck version-sensitive behavior when
 reviewing a particular application. These references informed original guidance;
 no copied implementation or third-party code is bundled.
 
@@ -8,6 +9,7 @@ no copied implementation or third-party code is bundled.
 | --- | --- |
 | [Agent Skills specification](https://agentskills.io/specification) | Frontmatter, progressive disclosure and portable skill structure |
 | [Express security](https://expressjs.com/en/advanced/best-practice-security/) | Production controls and framework review |
+| [Express middleware](https://expressjs.com/en/guide/using-middleware/) | Registration order and alternate route handling |
 | [Express proxy guide](https://expressjs.com/en/guide/behind-proxies/) | Forwarded header trust assumptions |
 | [Next.js data security](https://nextjs.org/docs/app/guides/data-security) | Server/client data and action boundaries |
 | [Next.js authentication](https://nextjs.org/docs/app/guides/authentication) | Server-side identity and authorization |
@@ -17,6 +19,12 @@ no copied implementation or third-party code is bundled.
 | [OWASP Top 10:2025](https://top10.owasp.org/2025/0x00_2025-Introduction/) | Edition-qualified awareness categories |
 | [OWASP API Top 10:2023](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) | API object/property/function authorization |
 | [MITRE CWE-639](https://cwe.mitre.org/data/definitions/639.html) | User-controlled object-key authorization |
+
+Additional audit references: [CWE-863](https://cwe.mitre.org/data/definitions/863.html)
+for incorrect authorization and [CWE-915](https://cwe.mitre.org/data/definitions/915.html)
+for mass assignment. ASVS is a requirements catalogue, not evidence that an
+application violates a requirement; use its applicable version and verification
+context ([OWASP ASVS](https://owasp.org/projects/asvs)).
 
 ## Selected root-cause mappings
 

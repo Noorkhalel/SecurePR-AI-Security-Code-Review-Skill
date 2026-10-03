@@ -33,3 +33,10 @@ API5:2023 covers function level authorization.
 Fix by scoping the operation to the verified actor/tenant and allowed action,
 preserving intentional sharing/admin policy. Test same-owner success, other-owner
 and other-tenant rejection, lower-role rejection and unchanged data on failure.
+
+For imported policies, inspect both the implementation and call arguments. Compare
+verified actor ID, target owner ID, tenant membership and requested tenant ID by
+value provenance, not by variable name. A self-comparison, wrong resource lookup,
+or check against a body-supplied actor can look like an ownership control while
+protecting nothing. Inspect alternate endpoints and middleware registration order
+before concluding either missing authorization or adequate shared protection.

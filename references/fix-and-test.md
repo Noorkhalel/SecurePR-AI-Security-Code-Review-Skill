@@ -26,3 +26,10 @@ Red/green claims require actual execution of the same meaningful assertion again
 both original and patched logic. A mock proves only its model; record integration
 coverage still needed. Do not create weaponized payloads, contact production,
 install target dependencies or expose secrets as part of a regression.
+
+For mixed allowed/protected fields, state whether the patch rejects the whole
+request or strips protected fields; preserve the existing contract unless changing
+it is necessary. Document adapter behavior, transaction assumptions and authority
+placement. A sequential duplicate-request test does not establish concurrency
+safety. Inspect each baseline failure: a syntax/import failure or broken test
+harness is not evidence that the security assertion caught the original flaw.

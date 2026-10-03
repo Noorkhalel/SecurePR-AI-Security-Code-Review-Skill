@@ -24,6 +24,10 @@ boundaries. Database content can carry previously untrusted input.
 
 A source-to-sink connection alone is insufficient: determine whether the source
 can affect syntax, authorization, destination or state in the necessary way.
+For each guard, record the exact value it checks and the exact value later used.
+A check on one resource followed by an operation on another is not authorization.
+Validation after an effect cannot protect that effect; validation before a later
+decode, concatenation or object overwrite may no longer constrain the sink.
 Consider control-flow dominance and early returns. Inspect all relevant alternate
 paths; avoid treating a check in one route as protection for another route.
 

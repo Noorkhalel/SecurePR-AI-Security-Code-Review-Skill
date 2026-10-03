@@ -1,0 +1,277 @@
+{
+  "starting_revision": "4a9201ba1a6aa87f2526ac65723f8a264add75a0",
+  "kind": "independent-static-helper-probes",
+  "probe_count": 48,
+  "notice": "Fresh-context reviewer probes against the starting helper. Informational limitations are not counted as vulnerabilities. Regressions are in tests/unit/test_audit.py.",
+  "results": [
+    {
+      "name": "known-good-excerpt",
+      "expected": "accepted; independent byte hash and second line",
+      "status": "accepted"
+    },
+    {
+      "name": "path-'../app.js'",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "path-'a/../app.js'",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "path-'/tmp/app.js'",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "path-'a//b'",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "path-'a\\\\b'",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "path-'a:b'",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "read-link.js",
+      "expected": "rejected without blocking",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "read-linked-dir/app.js",
+      "expected": "rejected without blocking",
+      "status": "rejected",
+      "exception": "NotADirectoryError"
+    },
+    {
+      "name": "read-pipe.js",
+      "expected": "rejected without blocking",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "hardlink",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "excluded-file",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "missing-scope-file",
+      "expected": "documented limitation: accepted, coverage is not verified",
+      "status": "accepted"
+    },
+    {
+      "name": "excluded-scope-without-evidence",
+      "expected": "documented limitation: accepted, coverage is not verified",
+      "status": "accepted"
+    },
+    {
+      "name": "independently-built-evidence",
+      "expected": "accepted",
+      "status": "accepted"
+    },
+    {
+      "name": "evidence-quote",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "evidence-sha256",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "evidence-line_start",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "evidence-line_end",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "evidence-file",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "clean-verdict-with-confirmed-finding",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "severity-prefix-mismatch",
+      "expected": "accepted; semantic limitation",
+      "status": "accepted"
+    },
+    {
+      "name": "aggregate-evidence-limit",
+      "expected": "rejected before source reads",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "private-key-interior",
+      "expected": "accepted with redacted quote",
+      "status": "accepted"
+    },
+    {
+      "name": "unquoted-common-credentials",
+      "expected": "best-effort redaction limitation; observe",
+      "status": "accepted"
+    },
+    {
+      "name": "double-carriage-return-fidelity",
+      "expected": "quote retains embedded CR as literal escape",
+      "status": "accepted"
+    },
+    {
+      "name": "file-byte-limit",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "inventory-truncation",
+      "expected": "accepted with explicit truncated=true",
+      "status": "accepted"
+    },
+    {
+      "name": "cli-surrogate-path",
+      "expected": "exit 2 bounded JSON error",
+      "status": "accepted",
+      "exit": 1
+    },
+    {
+      "name": "json-duplicate",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "json-nonfinite",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "json-depth",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "json-invalid-utf8",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "json-nul",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "json-escaped-braces",
+      "expected": "accepted",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-ordinary",
+      "expected": "accepted",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-addition",
+      "expected": "accepted",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-wrong-first-offset",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-wrong-later-offset",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-wrong-new-file-offset",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-context-only",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-zero-change-hunk",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-mismatched-git-header",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-malformed-metadata",
+      "expected": "rejected",
+      "status": "accepted"
+    },
+    {
+      "name": "diff-truncated",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "diff-overlapping",
+      "expected": "rejected",
+      "status": "rejected",
+      "exception": "Rejected"
+    },
+    {
+      "name": "diff-excessive-coordinates",
+      "expected": "rejected",
+      "status": "uncaught",
+      "exception": "ValueError"
+    },
+    {
+      "name": "cli-excessive-coordinate",
+      "expected": "exit 2 bounded JSON error",
+      "status": "accepted",
+      "exit": 1
+    }
+  ]
+}

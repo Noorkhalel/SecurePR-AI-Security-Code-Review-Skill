@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline release integrity checks for this trusted project, not target code."""
 import ast
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -62,6 +63,22 @@ def check():
                 lines=(ROOT/case['path']/finding['file']).read_text().splitlines()
                 if finding['anchor'] not in lines[finding['line']-1]:errors.append('stale anchor '+case['id'])
             if case['mode']=='pr':s.parse_diff((ROOT/case['path']/'change.diff').read_bytes())
+    evaluation_spec=importlib.util.spec_from_file_location('evaluation_integrity',ROOT/'tools/evaluate.py')
+    evaluator=importlib.util.module_from_spec(evaluation_spec);evaluation_spec.loader.exec_module(evaluator)
+    for name, manifest_name in [('audit-r1','audit'),('workflows-r1','workflows')]:
+        manifest_bytes=(ROOT/f'tests/expected/{manifest_name}.json').read_bytes()
+        manifest=s.load_json(manifest_bytes)
+        observations=s.load_json((ROOT/f'evaluation/runs/{name}.json').read_bytes())
+        recorded=s.load_json((ROOT/f'evaluation/runs/{name}.metrics.json').read_bytes())
+        if evaluator.score(manifest,observations)!=recorded:errors.append('stale metrics '+name)
+        snapshot=s.load_json((ROOT/f'evaluation/runs/{name}.snapshot.json').read_bytes())
+        if hashlib.sha256(manifest_bytes).hexdigest()!=snapshot['expected_manifest_sha256']:
+            errors.append('changed expected labels after review '+name)
+        for case in manifest['cases']:
+            for filename in case['files']:
+                key='cases/'+case['id']+'/'+filename
+                actual=hashlib.sha256((ROOT/case['path']/filename).read_bytes()).hexdigest()
+                if actual!=snapshot['files'].get(key):errors.append('changed reviewed fixture '+key)
     module=ast.parse((ROOT/'scripts/securepr.py').read_text())
     for node in ast.walk(module):
         if isinstance(node,ast.Import) and any(n.name.split('.')[0] in {'subprocess','socket','requests','http','urllib'} for n in node.names):errors.append('unsafe runtime import')

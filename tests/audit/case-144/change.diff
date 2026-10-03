@@ -1,0 +1,9 @@
+--- a/app.js
++++ b/app.js
+@@ -1,5 +1,3 @@
+ export async function remove(req, db) {
+-  const note = await db.note.findUnique({ where: { id: req.params.id } });
+-  if (note.ownerId !== req.actor.id) throw new Error('forbidden');
+-  return db.note.delete({ where: { id: note.id } });
++  return db.note.deleteMany({ where: { id: req.params.id, ownerId: req.actor.id } });
+ }

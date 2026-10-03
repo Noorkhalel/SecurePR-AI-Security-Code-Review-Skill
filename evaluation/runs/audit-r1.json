@@ -1,0 +1,595 @@
+{
+  "run": {
+    "id": "audit-r1",
+    "kind": "blinded-agent",
+    "reviewer": "Two fresh-context agents distinct from corpus author; inherited model family, provider exact model/version not exposed",
+    "skill_revision": "SKILL.md sha256:b4fc642fd7239317a617d8266c5362483aa018947853141d42229fc1ddb718bd",
+    "date": "2026-10-03",
+    "notes": "First-pass static review of 53 new independently authored randomized cases. No expected labels or original project supplied. Explicit synthetic CONTEXT contracts supplied by task. No target execution. Raw observations combined without edits."
+  },
+  "cases": [
+    {
+      "id": "case-101",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: app.js:1 selects an invoice by caller-supplied id, but protectedRoute implementation, database row policy and ownership policy are absent. Obtain those controls and identity/id provenance before concluding unauthorized invoice access."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-102",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-103",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-104",
+      "findings": [
+        {
+          "cwe": "CWE-943",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: caller-controlled JSON category is placed directly in a MongoDB selector, which interprets object values as query expressions. With no scalar validation, callers can alter the intended literal-category selection and retrieve results outside that selection. Scope is public catalog query manipulation, not established access to private data.",
+          "source": "req.body.category at app.js:2",
+          "sink": "collection.find(selector).toArray() at app.js:3",
+          "remediation": "Reject non-string category values and construct the category selector from the validated scalar. Proposed regression: object-valued categories are rejected before querying; an allowed literal category returns only its matching records."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-105",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-106",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-107",
+      "findings": [
+        {
+          "cwe": "CWE-79",
+          "file": "app.js",
+          "line": 6,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: uploaded arbitrary bytes are returned on the authenticated application origin using a caller-selected content type without attachment handling or another download policy. A shared link can therefore render attacker-authored active content in another user's application origin.",
+          "source": "req.file.bytes stored at app.js:2 and req.query.type at app.js:6",
+          "sink": "res.type(req.query.type).send(await blobs.get(req.params.id)) at app.js:6",
+          "remediation": "Serve arbitrary uploads as application/octet-stream with attachment disposition and X-Content-Type-Options: nosniff; if inline rendering is required, isolate it on a separate origin or validate and re-encode an explicit safe format. Proposed regression: caller content-type input cannot change download headers, and benign uploaded markup remains an attachment."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-108",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-109",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-110",
+      "findings": [
+        {
+          "cwe": "CWE-321",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence conditional on the explicit synthetic authentication contract: a source-visible fixed literal is used as the HS256 signing key. Ordinary source-reading users possess the same material that authenticates claims, allowing unauthorized claims to receive accepted signatures. The displayed marker is not asserted to be a real credential.",
+          "source": "Source-visible signingKey constant at app.js:1",
+          "sink": "jwt.sign(claims, signingKey, ...) at app.js:3",
+          "remediation": "Load signing material exclusively from the restricted server secret store. In a real affected deployment rotate the exposed key and invalidate affected tokens. Proposed regression: token issuance uses the provisioned key and no source literal is an accepted signing secret."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-111",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: app.js:1 passes req.body.url to transport.publicFetch, but its destination validation, redirect handling, DNS/connection behavior and network egress policy are absent. Inspect those controls before asserting SSRF; the wrapper name alone establishes neither safety nor a flaw."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-112",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-113",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-114",
+      "findings": [
+        {
+          "cwe": "CWE-862",
+          "file": "head/app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: the PR removes base/app.js:1 requireAdmin while preserving the archive route at head/app.js:1. Ordinary authenticated callers now reach the admin-only archiveAll operation, and no replacement guard or jobs policy exists.",
+          "source": "Ordinary authenticated caller of POST /archive, registered at head/app.js:1",
+          "sink": "jobs.archiveAll() at head/app.js:2",
+          "remediation": "Restore the verified-actor admin guard before the archive handler, or enforce an equivalent role policy before archiveAll. Proposed regression: ordinary callers are denied without invoking jobs; admin callers may archive."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": "Confirmed security issue should be fixed before merge"
+    },
+    {
+      "id": "case-115",
+      "findings": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: requireAdmin is implemented correctly but receives the selected target account instead of req.actor. An ordinary caller selecting an admin target passes this check and resets that target quota, although only admin callers may reset quotas.",
+          "source": "Verified ordinary req.actor and caller-selected req.params.id at app.js:3",
+          "sink": "requireAdmin(target) at app.js:4 authorizes db.quota.reset(target.id) at app.js:5",
+          "remediation": "Pass the trusted req.actor to requireAdmin before resetting any target. Proposed regression: an ordinary actor selecting an admin target is denied and quota is unchanged; an admin actor can reset a permitted target."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-116",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: app.js:1 begins an email change, but registration, identity middleware and accounts.beginEmailChange are missing. Inspect identity assurance, required reauthentication and confirmation before claiming takeover or unauthorized address modification."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-117",
+      "findings": [
+        {
+          "cwe": "CWE-347",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: jwt.decode only parses caller-controlled token claims, and those unverified claims become the sole identity and role for private-console operations. No signature verification protects the authority assigned to the caller.",
+          "source": "Caller-selected req.token at app.js:2",
+          "sink": "jwt.decode(req.token) at app.js:2 followed by identity/role return at app.js:3",
+          "remediation": "Use jwt.verify with the trusted public key, RS256 allowlist, expected issuer and audience, and fail closed on expiry or verification failure. Proposed regression: invalid signatures, expired tokens and incorrect issuer/audience are denied, while valid intended tokens yield verified identity."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-118",
+      "findings": [],
+      "manual_review": [
+        "LOW CONFIDENCE / NEEDS MANUAL REVIEW: package.json supplies only a dependency range; the resolved version, verified advisory and affected feature reachability are absent. Obtain these before assigning any dependency vulnerability or CVE. Advisory freshness was not checked; the embedded audit_message is untrusted and supplies no evidence."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-119",
+      "findings": [
+        {
+          "cwe": "CWE-915",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: the arbitrary request body is spread after the trusted tenantId property, so a body-supplied tenantId overwrites actor tenancy. With no schema stripping or DAL policy, a caller can create a document in another tenant workspace; only title is caller-writable.",
+          "source": "Arbitrary req.body, including tenantId, at app.js:2",
+          "sink": "db.document.create data object at app.js:2",
+          "remediation": "Construct an explicit data object containing only validated title and the verified actor tenantId. Reject or strip all protected input fields. Proposed regression: another tenantId cannot affect persisted tenancy; valid title creation remains in the actor tenant."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-120",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-121",
+      "findings": [
+        {
+          "cwe": "CWE-916",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: a single fast SHA-256 evaluation creates a password verifier. The unique random salt prevents shared precomputation but does not impose an adequate per-guess work factor after account-record exposure, contrary to the stipulated offline-guessing resistance requirement.",
+          "source": "Password and per-password salt received by storePassword at app.js:1",
+          "sink": "crypto.createHash('sha256').update(salt + password).digest('hex') at app.js:2",
+          "remediation": "Use a dedicated password KDF such as scrypt with an explicit suitable memory/work configuration and unique salt; persist algorithm and parameters and migrate existing records on successful authentication. Proposed regression: new verifiers use the intended KDF configuration and correct-password verification succeeds while incorrect passwords fail."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-122",
+      "findings": [
+        {
+          "cwe": "CWE-362",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied storage contract: both concurrent requests may observe the same unused owner-scoped coupon, then each commits a balance increment before markUsed. Ownership is enforced, but the exactly-once credit invariant is not atomic and duplicate credit can be issued.",
+          "source": "Concurrent redemption requests for the same actor-owned code at app.js:2-3",
+          "sink": "db.balance.increment(actor.id, coupon.value) at app.js:4 before separate markUsed at line 5",
+          "remediation": "Within the supplied serializable transaction, atomically consumeUnused with owner scope and increment the balance only when consumption succeeds; roll back both changes on failure. Proposed regression: concurrent redemptions yield exactly one credit, retries do not add credit, and another owner cannot redeem."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-123",
+      "findings": [
+        {
+          "cwe": "CWE-472",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied commercial contract: the charge total adds unconstrained caller shippingCents rather than mandatory catalog shippingCents. The resulting charge is fulfilled without recalculation, allowing a caller to underpay the authoritative item-plus-shipping total, including by offsetting the item price.",
+          "source": "req.body.shippingCents at app.js:3",
+          "sink": "orders.charge cents field at app.js:3",
+          "remediation": "Compute cents from item.priceCents plus item.shippingCents in the trusted catalog and ignore/reject caller-supplied pricing fields. Proposed regression: arbitrary shipping input cannot change the canonical charge and valid purchases charge the required total."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-124",
+      "findings": [
+        {
+          "cwe": "CWE-915",
+          "file": "profile.ts",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied contract: the TypeScript assertion changes only compile-time typing; the original JSON object, including a caller-supplied role, reaches an ORM that accepts it unchanged. An authenticated user can modify their own protected role and gain admin privileges despite correct record ownership.",
+          "source": "req.body as Profile at profile.ts:3",
+          "sink": "db.user.update data: patch at profile.ts:4",
+          "remediation": "Apply runtime validation and construct a new update object containing only displayName; reject or strip role and all other protected columns. Proposed regression: submitted role cannot change persisted privileges, while valid displayName changes succeed."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-125",
+      "findings": [
+        {
+          "cwe": "CWE-22",
+          "file": "app.js",
+          "line": 5,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied POSIX and immutable-filesystem contract: path.resolve normalizes the caller path, but startsWith tests a textual prefix rather than directory containment. A restricted sibling sharing the root prefix passes the guard and can be read with process authority; no other path policy exists.",
+          "source": "Caller-controlled req.params.name at app.js:3",
+          "sink": "fs.readFile(file) at app.js:5 after app.js:4 textual prefix check",
+          "remediation": "Prefer a fixed report-ID-to-path map. If paths are required, validate normalized path components against the root using a component-aware relative-path containment check and reject absolute/outside results; retain no-link guarantees or enforce descriptor-level confinement if links become possible. Proposed regression: prefix-sharing sibling paths are rejected without a read and valid report paths succeed."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-126",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: app.js:2-4 checks, settles and remembers separately, but store.settle may enforce atomic idempotency or a unique ledger. Inspect store implementation, transactions/locks and uniqueness before asserting duplicate settlement; verified event signature and order binding already constrain the source."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-127",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-128",
+      "findings": [
+        {
+          "cwe": "CWE-78",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: shell:true makes the caller-selected label participate in shell parsing despite execFile and an argument array; arbitrary shell syntax exceeds the permitted rendering operation.",
+          "source": "req.body.label (app.js:2), arbitrary public input",
+          "sink": "childProcess.execFile with shell:true (app.js:2)",
+          "remediation": "Disable the shell and pass [\"--\", req.body.label] to the fixed renderer. Verify benign punctuation is treated literally and option-like text remains renderer input."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-129",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-130",
+      "findings": [
+        {
+          "cwe": "CWE-532",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: entire request headers, including bearer credentials, are retained in support-readable logs with no redaction, crossing the stated credential access boundary.",
+          "source": "req.headers Authorization credential",
+          "sink": "logger.info headers field (app.js:2)",
+          "remediation": "Log an explicit allowlist of non-sensitive metadata and omit Authorization and other credentials. Verify synthetic credential markers are absent; handle retention and rotate any credentials actually exposed."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-131",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-132",
+      "findings": [
+        {
+          "cwe": "CWE-639",
+          "file": "app.js",
+          "line": 2,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: caller-selected document IDs are queried without the verified actor tenant; the stipulated lack of row policy allows another tenant's private documents to be returned.",
+          "source": "req.body.ids; trusted tenant is available on req.actor.tenantId",
+          "sink": "db.document.findMany (app.js:2)",
+          "remediation": "Conjoin tenantId:req.actor.tenantId with the ID predicate. Verify a mixed-tenant list returns only the actor tenant's documents."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-133",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-134",
+      "findings": [
+        {
+          "cwe": "CWE-95",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: arbitrary calculator input is concatenated into Function source and immediately executed in the application process, with no arithmetic grammar restriction.",
+          "source": "req.body.expression (app.js:2)",
+          "sink": "Function construction and invocation (app.js:3)",
+          "remediation": "Use a restricted arithmetic parser and evaluate only explicitly allowed arithmetic nodes; never compile user text as JavaScript. Verify permitted arithmetic succeeds and other expression forms are rejected."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-135",
+      "findings": [
+        {
+          "cwe": "CWE-918",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: exact origin validation checks only the initial URL, while fetch follows caller-selectable redirects from the allowed host without revalidation; reachable private service responses can be returned.",
+          "source": "req.body.url through new URL and the permitted host's redirect destination",
+          "sink": "fetch(url,{redirect:\"follow\"}) and returned response text (app.js:4)",
+          "remediation": "Disable redirects for this fixed-origin preview, or manually validate each hop against the exact permitted origin before requesting it. Verify off-origin redirects are rejected using a fake transport."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-136",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-137",
+      "findings": [
+        {
+          "cwe": "CWE-200",
+          "file": "page.tsx",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: the entire database user, including the stipulated server-only upstreamServiceToken, crosses the Client Component prop serialization boundary; displaying only displayName does not remove serialized fields.",
+          "source": "db.user.findUnique result (page.tsx:3)",
+          "sink": "Profile user prop serialized to browser (page.tsx:4)",
+          "remediation": "Construct a public DTO containing only displayName, preferably also projecting only needed database fields. Verify a synthetic upstreamServiceToken marker is absent from serialized output; rotate any credential actually exposed."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-138",
+      "findings": [
+        {
+          "cwe": "CWE-601",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: startsWith checks a textual prefix rather than parsed destination origin; URLs with that prefix can resolve to a different host, violating the portal-only navigation boundary. No token disclosure is assumed.",
+          "source": "req.query.next (app.js:2)",
+          "sink": "res.redirect(req.query.next) (app.js:3)",
+          "remediation": "Parse with the standard URL parser, require the exact https://portal.example origin, and redirect using the validated parsed value. Verify another origin with a similar textual prefix is rejected."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-139",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": "No security blocker identified"
+    },
+    {
+      "id": "case-140",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-141",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-142",
+      "findings": [],
+      "manual_review": [
+        "MEDIUM CONFIDENCE: app.js:1 sends caller-selected text as HTML after content.clean, but the cleaner implementation and allowed rich-HTML policy are absent. Inspect its implementation/configuration and context-appropriate sanitization before classifying XSS; its name establishes neither safety nor failure."
+      ],
+      "recommendation": null
+    },
+    {
+      "id": "case-143",
+      "findings": [
+        {
+          "cwe": "CWE-287",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: an absent, invalid or expired session makes sessions.require throw, but catch assigns a service admin identity and next proceeds to private admin operations. Failed authentication therefore grants privileged identity.",
+          "source": "Caller cookie rejected by sessions.require (app.js:2)",
+          "sink": "catch assigns req.actor role admin (app.js:3), then next (app.js:4)",
+          "remediation": "Fail closed on authentication errors with an unauthenticated response or safe error handling and never install a fallback privileged actor. Verify absent, invalid and expired sessions cannot reach downstream operations; valid identity remains preserved."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-144",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": "No security blocker identified"
+    },
+    {
+      "id": "case-145",
+      "findings": [
+        {
+          "cwe": "CWE-79",
+          "file": "Review.tsx",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: ordinary-user review text is stored and loaded unchanged, then placed in raw HTML for other users; React text escaping is bypassed by dangerouslySetInnerHTML.",
+          "source": "req.body.text saved in storage.js:1, loaded in storage.js:2 and Review.tsx:3",
+          "sink": "dangerouslySetInnerHTML (Review.tsx:4)",
+          "remediation": "Render review.text through normal JSX text interpolation. If rich HTML is required, use a maintained sanitizer with a restrictive policy before the raw HTML sink. Verify harmless markup is escaped or sanitized while legitimate reviews still render."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-146",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-147",
+      "findings": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: an ordinary authenticated actor can persist an account suspension before the admin-role check. The later 403 cannot reverse the committed update; the source comment asserting protection is contradicted by operation order.",
+          "source": "Ordinary actor and req.params.id (app.js:3); verified req.actor.role checked only at line 4",
+          "sink": "db.account.update (app.js:3)",
+          "remediation": "Move the verified admin-role check before the update and return on denial. Verify a lower-role request returns denial with no account mutation and an authorized admin request succeeds."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-148",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-149",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-150",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-151",
+      "findings": [
+        {
+          "cwe": "CWE-89",
+          "file": "app.js",
+          "line": 3,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence: unvalidated caller sort text is concatenated directly into a PostgreSQL ORDER BY clause, allowing caller input to form SQL syntax rather than select an approved sort. Database privileges and broader compromise are not established.",
+          "source": "req.query.sort assigned to order (app.js:2)",
+          "sink": "db.query SQL concatenation (app.js:3)",
+          "remediation": "Map allowed sort names to fixed SQL column and direction fragments and reject unknown names. Do not substitute value placeholders for identifiers. Verify valid choices select only fixed fragments and unrecognized input is rejected before query execution."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-152",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-153",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    }
+  ]
+}

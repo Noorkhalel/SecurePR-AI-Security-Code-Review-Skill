@@ -1,0 +1,19 @@
+{
+  "description": "Arithmetic aggregation of first-pass new audit and workflow runs only; excludes historical and metamorphic cases. Strict CWE/file/line matching.",
+  "runs": [
+    "audit-r1",
+    "workflows-r1"
+  ],
+  "cases": 63,
+  "true_positives": 26,
+  "false_positives": 2,
+  "true_negatives": 29,
+  "false_negatives": 2,
+  "ambiguous_abstentions": 6,
+  "ambiguous_missing_followup": 0,
+  "safe_manual_review_cases": 0,
+  "recommendation_conflicts": 0,
+  "precision": 0.9285714285714286,
+  "recall": 0.9285714285714286,
+  "f1": 0.9285714285714286
+}

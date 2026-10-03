@@ -1,0 +1,193 @@
+{
+  "version": "1.0.0",
+  "description": "Ten supplemental workflow cases authored by the primary auditor; frozen before separate fresh review. Static synthetic contracts only.",
+  "cases": [
+    {
+      "id": "case-201",
+      "path": "tests/workflows/case-201",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md",
+        "policy.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "line": 4,
+          "anchor": "state.invitations.push"
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "invitation-privilege",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-202",
+      "path": "tests/workflows/case-202",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "email-verification-binding",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-203",
+      "path": "tests/workflows/case-203",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "forgotten-password-binding",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-204",
+      "path": "tests/workflows/case-204",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "fulfillment-workflow",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-205",
+      "path": "tests/workflows/case-205",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "one-time-reward",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-206",
+      "path": "tests/workflows/case-206",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-837",
+          "file": "app.js",
+          "line": 6,
+          "anchor": "account.credit += reward.amount;"
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "one-time-reward",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-207",
+      "path": "tests/workflows/case-207",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-841",
+          "file": "app.js",
+          "line": 6,
+          "anchor": "state.shipments.push"
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "fulfillment-workflow",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-208",
+      "path": "tests/workflows/case-208",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md",
+        "policy.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "invitation-privilege",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-209",
+      "path": "tests/workflows/case-209",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "line": 7,
+          "anchor": "user.emailVerified = true;"
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "email-verification-binding",
+        "workflow"
+      ]
+    },
+    {
+      "id": "case-210",
+      "path": "tests/workflows/case-210",
+      "mode": "snippet",
+      "files": [
+        "app.js",
+        "CONTEXT.md"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-640",
+          "file": "app.js",
+          "line": 7,
+          "anchor": "user.passwordDigest = digest;"
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "forgotten-password-binding",
+        "workflow"
+      ]
+    }
+  ]
+}

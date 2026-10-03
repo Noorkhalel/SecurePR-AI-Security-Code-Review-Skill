@@ -1,0 +1,127 @@
+{
+  "run": {
+    "id": "workflows-r1",
+    "kind": "blinded-agent",
+    "reviewer": "Fresh-context agent distinct from primary auditor who authored these supplemental cases; exact provider model/version not exposed",
+    "skill_revision": "SKILL.md sha256:b4fc642fd7239317a617d8266c5362483aa018947853141d42229fc1ddb718bd",
+    "date": "2026-10-03",
+    "notes": "First-pass static review, 10 new randomized workflow cases. No expected labels or original repository supplied. Explicit trusted synthetic contracts. No target execution. Observations retained without edits."
+  },
+  "cases": [
+    {
+      "id": "case-201",
+      "findings": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "line": 4,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied synthetic contract: the guard establishes only that the actor role has an invitation policy; it never checks whether the requested role belongs to that policy. A manager or administrator can record an administrator invitation, and a manager can record a manager invitation, violating the explicit grant limits. The contract states recorded invitation roles are granted without another filter.",
+          "source": "Caller-controlled role argument to invite; verified actor.role selects allowedInvites, whose policy arrays are defined in policy.js:1.",
+          "sink": "app.js:4 appends the unchecked role to the server-owned invitations list for actor.tenantId.",
+          "remediation": "Before appending, require the requested role to occur in the actor-specific allowedInvites array, with a fail-closed result for actors without an allowed role. Preserve the tenant derived from the verified actor."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-202",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-203",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-204",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-205",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-206",
+      "findings": [
+        {
+          "cwe": "CWE-837",
+          "file": "app.js",
+          "line": 6,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied synthetic contract: the guard checks reward ownership and account existence but omits reward.used. Setting used after crediting does not prevent another call from crediting the same server-issued reward again. This violates the single-redemption invariant even in the complete synchronous single-process model; no race premise is needed.",
+          "source": "Verified reward owner supplies rewardId on successive redeem calls; amount remains server-owned and immutable.",
+          "sink": "app.js:6 adds reward.amount to account.credit on every accepted call, including calls after reward.used was set.",
+          "remediation": "Reject already-used rewards before crediting and retain consumption with the credit mutation as one synchronous operation in this model. If storage later becomes asynchronous or distributed, enforce consumption and crediting atomically."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-207",
+      "findings": [
+        {
+          "cwe": "CWE-841",
+          "file": "app.js",
+          "line": 6,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied synthetic contract: the state guard rejects only shipped orders. An owner in the correct tenant can therefore ship an order in an unpaid state, bypassing the required settled-payment transition. The ownership and tenant checks limit affected orders but do not enforce payment.",
+          "source": "Verified customer chooses an owned orderId whose server-owned order state is not paid and not shipped.",
+          "sink": "app.js:6 records a shipment before app.js:7 changes the order state to shipped; the contract gives this effect inventory and goods consequences.",
+          "remediation": "Require order.state to equal paid before creating a shipment, then transition it to shipped within the same synchronous operation. Reject every other prior state."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-208",
+      "findings": [],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-209",
+      "findings": [
+        {
+          "cwe": "CWE-287",
+          "file": "app.js",
+          "line": 7,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied synthetic contract: the token is checked for account binding, expiry and prior use, but the requested email is never compared with token.email. A user with a valid token delivered to their bound address can mark a different caller-chosen address verified without proving control of it. This establishes false email verification; downstream account takeover is not established by the snippet.",
+          "source": "Authenticated user supplies requestedEmail and a valid unused email-verification token bound to their own account and token.email.",
+          "sink": "app.js:6 assigns requestedEmail, and app.js:7 marks that address verified.",
+          "remediation": "Require requestedEmail to equal the token-bound address and assign user.email from token.email before marking it verified. Preserve account binding, expiry and single-use checks."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    },
+    {
+      "id": "case-210",
+      "findings": [
+        {
+          "cwe": "CWE-639",
+          "file": "app.js",
+          "line": 7,
+          "confidence": "CONFIRMED",
+          "reason": "Static evidence under the supplied synthetic contract: a valid unused unexpired recovery token authorizes a password update selected by requestedUserId without comparing that identifier with token.userId. A caller who possesses a legitimate token for their own account and knows another existing account identifier can replace that other account password with caller-chosen credentials. Token unpredictability, expiry and consumption do not establish target-account binding.",
+          "source": "Public recover caller supplies requestedUserId and a trusted-adapter digest of caller-chosen credentials, together with a valid token for a different account.",
+          "sink": "app.js:7 replaces the passwordDigest of the account selected by requestedUserId at app.js:4.",
+          "remediation": "Resolve the account from token.userId, or reject any requestedUserId that differs from token.userId, before consuming the token and updating credentials."
+        }
+      ],
+      "manual_review": [],
+      "recommendation": null
+    }
+  ]
+}

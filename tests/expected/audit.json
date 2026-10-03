@@ -1,0 +1,924 @@
+{
+  "version": "1.0.0",
+  "description": "53 new inert static adversarial cases. Evaluator-only labels. Same-author design; not a detector result. Neutral IDs shuffled with seed 20261003.",
+  "cases": [
+    {
+      "id": "case-101",
+      "path": "tests/audit/case-101",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": true,
+      "tags": [
+        "ambiguous-authorization"
+      ]
+    },
+    {
+      "id": "case-102",
+      "path": "tests/audit/case-102",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "upload"
+      ]
+    },
+    {
+      "id": "case-103",
+      "path": "tests/audit/case-103",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "secrets"
+      ]
+    },
+    {
+      "id": "case-104",
+      "path": "tests/audit/case-104",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-943",
+          "file": "app.js",
+          "anchor": "collection.find",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "nosql"
+      ]
+    },
+    {
+      "id": "case-105",
+      "path": "tests/audit/case-105",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "auth"
+      ]
+    },
+    {
+      "id": "case-106",
+      "path": "tests/audit/case-106",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "files"
+      ]
+    },
+    {
+      "id": "case-107",
+      "path": "tests/audit/case-107",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-79",
+          "file": "app.js",
+          "anchor": "res.type(req.query.type)",
+          "line": 6
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "upload"
+      ]
+    },
+    {
+      "id": "case-108",
+      "path": "tests/audit/case-108",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "jwt"
+      ]
+    },
+    {
+      "id": "case-109",
+      "path": "tests/audit/case-109",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "logging"
+      ]
+    },
+    {
+      "id": "case-110",
+      "path": "tests/audit/case-110",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-321",
+          "file": "app.js",
+          "anchor": "jwt.sign",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "secrets"
+      ]
+    },
+    {
+      "id": "case-111",
+      "path": "tests/audit/case-111",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": true,
+      "tags": [
+        "ambiguous-ssrf"
+      ]
+    },
+    {
+      "id": "case-112",
+      "path": "tests/audit/case-112",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "logic"
+      ]
+    },
+    {
+      "id": "case-113",
+      "path": "tests/audit/case-113",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "README.md",
+        "app.js",
+        "policy.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "multifile"
+      ]
+    },
+    {
+      "id": "case-114",
+      "path": "tests/audit/case-114",
+      "mode": "pr",
+      "files": [
+        "CONTEXT.md",
+        "base/app.js",
+        "change.diff",
+        "head/app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-862",
+          "file": "head/app.js",
+          "anchor": "router.post",
+          "line": 1
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "pr"
+      ]
+    },
+    {
+      "id": "case-115",
+      "path": "tests/audit/case-115",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js",
+        "policy.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "anchor": "requireAdmin(target)",
+          "line": 4
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "multifile"
+      ]
+    },
+    {
+      "id": "case-116",
+      "path": "tests/audit/case-116",
+      "mode": "snippet",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": true,
+      "tags": [
+        "ambiguous-auth"
+      ]
+    },
+    {
+      "id": "case-117",
+      "path": "tests/audit/case-117",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-347",
+          "file": "app.js",
+          "anchor": "jwt.decode",
+          "line": 2
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "jwt"
+      ]
+    },
+    {
+      "id": "case-118",
+      "path": "tests/audit/case-118",
+      "mode": "snippet",
+      "files": [
+        "CONTEXT.md",
+        "app.js",
+        "package.json"
+      ],
+      "expected": [],
+      "manual_review_required": true,
+      "tags": [
+        "ambiguous-dependency"
+      ]
+    },
+    {
+      "id": "case-119",
+      "path": "tests/audit/case-119",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-915",
+          "file": "app.js",
+          "anchor": "db.document.create",
+          "line": 2
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "tenant"
+      ]
+    },
+    {
+      "id": "case-120",
+      "path": "tests/audit/case-120",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "command"
+      ]
+    },
+    {
+      "id": "case-121",
+      "path": "tests/audit/case-121",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-916",
+          "file": "app.js",
+          "anchor": "crypto.createHash",
+          "line": 2
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "crypto"
+      ]
+    },
+    {
+      "id": "case-122",
+      "path": "tests/audit/case-122",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-362",
+          "file": "app.js",
+          "anchor": "db.balance.increment",
+          "line": 4
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "race"
+      ]
+    },
+    {
+      "id": "case-123",
+      "path": "tests/audit/case-123",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-472",
+          "file": "app.js",
+          "anchor": "orders.charge",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "logic"
+      ]
+    },
+    {
+      "id": "case-124",
+      "path": "tests/audit/case-124",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "profile.ts"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-915",
+          "file": "profile.ts",
+          "anchor": "db.user.update",
+          "line": 4
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "mass-assignment"
+      ]
+    },
+    {
+      "id": "case-125",
+      "path": "tests/audit/case-125",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-22",
+          "file": "app.js",
+          "anchor": "fs.readFile",
+          "line": 5
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "files"
+      ]
+    },
+    {
+      "id": "case-126",
+      "path": "tests/audit/case-126",
+      "mode": "snippet",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": true,
+      "tags": [
+        "ambiguous-race"
+      ]
+    },
+    {
+      "id": "case-127",
+      "path": "tests/audit/case-127",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "crypto"
+      ]
+    },
+    {
+      "id": "case-128",
+      "path": "tests/audit/case-128",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-78",
+          "file": "app.js",
+          "anchor": "execFile",
+          "line": 2
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "command"
+      ]
+    },
+    {
+      "id": "case-129",
+      "path": "tests/audit/case-129",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "bola"
+      ]
+    },
+    {
+      "id": "case-130",
+      "path": "tests/audit/case-130",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-532",
+          "file": "app.js",
+          "anchor": "logger.info",
+          "line": 2
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "logging"
+      ]
+    },
+    {
+      "id": "case-131",
+      "path": "tests/audit/case-131",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "tenant"
+      ]
+    },
+    {
+      "id": "case-132",
+      "path": "tests/audit/case-132",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-639",
+          "file": "app.js",
+          "anchor": "db.document.findMany",
+          "line": 2
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "bola"
+      ]
+    },
+    {
+      "id": "case-133",
+      "path": "tests/audit/case-133",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "Profile.tsx",
+        "page.tsx"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "nextjs"
+      ]
+    },
+    {
+      "id": "case-134",
+      "path": "tests/audit/case-134",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-95",
+          "file": "app.js",
+          "anchor": "Function('return",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "eval"
+      ]
+    },
+    {
+      "id": "case-135",
+      "path": "tests/audit/case-135",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-918",
+          "file": "app.js",
+          "anchor": "await fetch",
+          "line": 4
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "ssrf"
+      ]
+    },
+    {
+      "id": "case-136",
+      "path": "tests/audit/case-136",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "Review.tsx",
+        "storage.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "xss"
+      ]
+    },
+    {
+      "id": "case-137",
+      "path": "tests/audit/case-137",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "Profile.tsx",
+        "page.tsx"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-200",
+          "file": "page.tsx",
+          "anchor": "<Profile user={user}",
+          "line": 4
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "nextjs"
+      ]
+    },
+    {
+      "id": "case-138",
+      "path": "tests/audit/case-138",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-601",
+          "file": "app.js",
+          "anchor": "res.redirect",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "redirect"
+      ]
+    },
+    {
+      "id": "case-139",
+      "path": "tests/audit/case-139",
+      "mode": "pr",
+      "files": [
+        "CONTEXT.md",
+        "base/app.js",
+        "change.diff",
+        "head/app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "pr"
+      ]
+    },
+    {
+      "id": "case-140",
+      "path": "tests/audit/case-140",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "nosql"
+      ]
+    },
+    {
+      "id": "case-141",
+      "path": "tests/audit/case-141",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "admin"
+      ]
+    },
+    {
+      "id": "case-142",
+      "path": "tests/audit/case-142",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": true,
+      "tags": [
+        "ambiguous-xss"
+      ]
+    },
+    {
+      "id": "case-143",
+      "path": "tests/audit/case-143",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-287",
+          "file": "app.js",
+          "anchor": "catch { req.actor",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "auth"
+      ]
+    },
+    {
+      "id": "case-144",
+      "path": "tests/audit/case-144",
+      "mode": "pr",
+      "files": [
+        "CONTEXT.md",
+        "base/app.js",
+        "change.diff",
+        "head/app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "pr"
+      ]
+    },
+    {
+      "id": "case-145",
+      "path": "tests/audit/case-145",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "Review.tsx",
+        "storage.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-79",
+          "file": "Review.tsx",
+          "anchor": "dangerouslySetInnerHTML",
+          "line": 4
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "xss"
+      ]
+    },
+    {
+      "id": "case-146",
+      "path": "tests/audit/case-146",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "eval"
+      ]
+    },
+    {
+      "id": "case-147",
+      "path": "tests/audit/case-147",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-863",
+          "file": "app.js",
+          "anchor": "await db.account.update",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "admin"
+      ]
+    },
+    {
+      "id": "case-148",
+      "path": "tests/audit/case-148",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "redirect"
+      ]
+    },
+    {
+      "id": "case-149",
+      "path": "tests/audit/case-149",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "ssrf"
+      ]
+    },
+    {
+      "id": "case-150",
+      "path": "tests/audit/case-150",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "profile.ts"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "mass-assignment"
+      ]
+    },
+    {
+      "id": "case-151",
+      "path": "tests/audit/case-151",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js",
+        "review-hints.json"
+      ],
+      "expected": [
+        {
+          "cwe": "CWE-89",
+          "file": "app.js",
+          "anchor": "return db.query",
+          "line": 3
+        }
+      ],
+      "manual_review_required": false,
+      "tags": [
+        "sql"
+      ]
+    },
+    {
+      "id": "case-152",
+      "path": "tests/audit/case-152",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "race"
+      ]
+    },
+    {
+      "id": "case-153",
+      "path": "tests/audit/case-153",
+      "mode": "full",
+      "files": [
+        "CONTEXT.md",
+        "app.js"
+      ],
+      "expected": [],
+      "manual_review_required": false,
+      "tags": [
+        "sql"
+      ]
+    }
+  ]
+}

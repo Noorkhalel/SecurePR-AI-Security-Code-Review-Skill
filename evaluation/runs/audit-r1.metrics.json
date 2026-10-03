@@ -1,0 +1,555 @@
+{
+  "run": {
+    "id": "audit-r1",
+    "kind": "blinded-agent",
+    "reviewer": "Two fresh-context agents distinct from corpus author; inherited model family, provider exact model/version not exposed",
+    "skill_revision": "SKILL.md sha256:b4fc642fd7239317a617d8266c5362483aa018947853141d42229fc1ddb718bd",
+    "date": "2026-10-03",
+    "notes": "First-pass static review of 53 new independently authored randomized cases. No expected labels or original project supplied. Explicit synthetic CONTEXT contracts supplied by task. No target execution. Raw observations combined without edits."
+  },
+  "cases": 53,
+  "true_positives": 23,
+  "false_positives": 0,
+  "true_negatives": 24,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "ambiguous_abstentions": 6,
+  "ambiguous_missing_followup": 0,
+  "safe_manual_review_cases": 0,
+  "recommendation_conflicts": 0,
+  "details": [
+    {
+      "id": "case-101",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-102",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-103",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-104",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-105",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-106",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-107",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-108",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-109",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-110",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-111",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-112",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-113",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-114",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": "Confirmed security issue should be fixed before merge",
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-115",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-116",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-117",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-118",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-119",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-120",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-121",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-122",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-123",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-124",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-125",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-126",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-127",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-128",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-129",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-130",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-131",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-132",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-133",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-134",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-135",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-136",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-137",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-138",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-139",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": "No security blocker identified",
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-140",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-141",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-142",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": true,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-143",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-144",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": "No security blocker identified",
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-145",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-146",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-147",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-148",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-149",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-150",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-151",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-152",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-153",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    }
+  ],
+  "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+}

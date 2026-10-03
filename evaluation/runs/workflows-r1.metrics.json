@@ -1,0 +1,125 @@
+{
+  "run": {
+    "id": "workflows-r1",
+    "kind": "blinded-agent",
+    "reviewer": "Fresh-context agent distinct from primary auditor who authored these supplemental cases; exact provider model/version not exposed",
+    "skill_revision": "SKILL.md sha256:b4fc642fd7239317a617d8266c5362483aa018947853141d42229fc1ddb718bd",
+    "date": "2026-10-03",
+    "notes": "First-pass static review, 10 new randomized workflow cases. No expected labels or original repository supplied. Explicit trusted synthetic contracts. No target execution. Observations retained without edits."
+  },
+  "cases": 10,
+  "true_positives": 3,
+  "false_positives": 2,
+  "true_negatives": 5,
+  "false_negatives": 2,
+  "precision": 0.6,
+  "recall": 0.6,
+  "f1": 0.6,
+  "ambiguous_abstentions": 0,
+  "ambiguous_missing_followup": 0,
+  "safe_manual_review_cases": 0,
+  "recommendation_conflicts": 0,
+  "details": [
+    {
+      "id": "case-201",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-202",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-203",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-204",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-205",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-206",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-207",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-208",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-209",
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    },
+    {
+      "id": "case-210",
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "manual_review": false,
+      "recommendation": null,
+      "recommendation_conflict": false,
+      "safe_manual_review": false
+    }
+  ],
+  "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+}

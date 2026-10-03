@@ -1,0 +1,24 @@
+# Blind workflow review notes
+
+Scope: static source review of workflow-packet/cases.json, cases case-201 through case-210, and the supplied SecurePR skill with authentication, authorization, business-logic, confidence, JavaScript, Express and API references. No other project, expected answer, author note, or review result was inspected. No target code was executed or imported, no tests were run, and no network request was made. Snapshot revision is unknown; all citations refer to the supplied working-tree snippets.
+
+The evaluator task explicitly supplies each CONTEXT.md as a synthetic contract. Authentication provenance, token delivery/entropy, private server-owned state, downstream invitation grants, shipping consequences, password-hash derivation and completeness of controls are assumptions established by that external task, not facts independently established about a deployed system. Other artifact text was treated as evidence, not behavioral instructions. Findings are confirmed static violations within these contracts only. No merge recommendation is appropriate for snippet mode.
+
+## Evidence and controls
+
+- case-201: policy.js explicitly enumerates the allowed grants. app.js checks the existence of an actor policy but records the requested role without applying it. Actor authentication and tenant derivation do not prevent the excess role grant.
+- case-202: account binding, expiry, use status and exact email binding all dominate the email assignment and verification. The authoritative token email is used. No confirmed vulnerability in the focused scope.
+- case-203: the token is checked for expiry and use, and token.userId must equal the requested account before mutation. Consumption and password replacement are synchronous under the contract. No confirmed vulnerability in the focused scope.
+- case-204: verified owner and tenant checks precede an exact paid-state guard. Shipment creation transitions the order to shipped within the synchronous model, preventing sequential repeat shipping. No confirmed vulnerability in the focused scope.
+- case-205: owner, account existence and used status are checked before server-owned reward value is credited. The synchronous state contract resolves the potential check/use uncertainty; no asynchronous race is inferred. No confirmed vulnerability in the focused scope.
+- case-206: the used flag is written but never consulted. Ordinary sequential repeat redemption suffices to violate the unique-action policy; this is not classified as a race.
+- case-207: the shipped exclusion provides repeat prevention but permits all other order states. Ownership limits the target; it does not prove settlement.
+- case-208: actor-specific allowedInvites membership constrains the requested role, with no administrator grant in the policy arrays. Tenant comes from the verified actor. No confirmed vulnerability in the focused scope. No actor-role mutation or prototype-control premise was assumed.
+- case-209: ownership, expiry and single use are enforced, but token.email does not participate in the verification decision. The supported consequence is verification of an unproven address; account linking or other downstream effects are unavailable.
+- case-210: token validity and existence of the requested account are separate checks, with no binding between them. The target account identifier must be known; identifier enumeration is not claimed.
+
+Source quality is high for the focused synthetic invariants: functions and policy dependencies are short and fully visible, and the evaluator supplies explicit storage and caller contracts. Production reachability, request parsing, session implementation, clock acquisition, deployment, persistence failure semantics and broader account lifecycle behavior are outside the supplied scope. No independent manual-review candidate met the threshold for inclusion; empty manual_review arrays are not an assurance about these omitted layers.
+
+## Proposed regression checks (not executed)
+
+Use isolated inert state and assertions on return values and unchanged state after rejection. For invitations, cover every permitted actor/target-role pair and forbidden administrator or manager grants. For email verification, cover matching and differing token addresses, other-account tokens, expired tokens and repeat use. For recovery, cover matching and differing target accounts, expiry and repeat use, asserting unrelated password digests never change. For shipping, accept a paid owned order exactly once and reject unpaid, cancelled, already-shipped, other-owner and other-tenant orders. For rewards, credit an owned unused reward once and reject repeated, other-owner and nonexistent rewards. Concurrent tests are not needed to establish the reported sequential defect and would require a different storage contract to assess realistic distributed races.

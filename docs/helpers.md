@@ -58,3 +58,7 @@ base/head checkout. Partial, metadata-only and unsupported patches require other
 source evidence. Excerpt redaction preserves embedded control bytes as escapes;
 ordinary CRLF is one physical line ending. Unquoted credential/header lines also
 receive best-effort masking, which can hide benign configuration.
+
+Improved masking can change the redacted quote for unchanged source bytes. If an
+older report stops validating, regenerate its excerpt from the same verified
+snapshot; do not disable evidence checks or substitute an invented quote.

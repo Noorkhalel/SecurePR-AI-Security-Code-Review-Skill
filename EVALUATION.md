@@ -1,6 +1,13 @@
-# Evaluation — SecurePR 1.0.0
+# Evaluation
 
-## What was actually evaluated
+The original 1.0.0 results below are preserved as historical evidence. The
+[1.0.1 adversarial audit](AUDIT.md) records newly found defects, repairs, expanded
+tests and their limitations. Its 63 new first-pass cases score TP 26 / FP 2 / TN 29 /
+FN 2, with precision/recall/F1 0.928571 under strict label/location matching. The
+two workflow taxonomy disagreements are preserved and explained in the audit.
+The passing historical result did not prevent those defects.
+
+## Original 1.0.0 evaluation
 
 On 2026-10-02, three fresh-context agents used the trusted skill to review disjoint
 batches of 49 synthetic cases. They received neutral case IDs, source files and
@@ -45,16 +52,24 @@ Raw evidence: [observations](evaluation/runs/blind-r1.json),
 
 ## Matching and reproducibility
 
-`tools/evaluate.py` matches each high-confidence/confirmed observation to one
-expected CWE, file and anchor within two source lines. Duplicates/unmatched
+`tools/evaluate.py` uses maximum bipartite matching to match each confirmed or
+high-confidence observation to one expected CWE, file and anchor within two source
+lines. Duplicates/unmatched
 findings count as FP; missing expected findings count as FN. TN counts only
 definite negative cases. Ambiguous abstention and follow-up are separate. All case
 IDs must be present exactly once. Precision = TP/(TP+FP); recall = TP/(TP+FN);
 F1 = 2TP/(2TP+FP+FN). Undefined ratios are null, not fabricated perfect scores.
 The scorer does not grade severity or automatically verify natural-language reasoning.
+Version 1.0.1 additionally counts safe-case manual-review noise and internally
+contradictory PR recommendations. `--strict` returns exit 1 for any unmatched or
+missed finding, missing ambiguous follow-up, safe-case noise or contradictory PR
+verdict. Without it, a valid score is returned even when detection is poor. Invalid
+artifacts return exit 2. Evaluation findings are material security issues; the
+compact format does not grade informational hardening. CI replays frozen outputs;
+it does not call a model or establish current detection quality.
 
 ```sh
-python3 -I tools/evaluate.py evaluation/runs/blind-r1.json
+python3 -I tools/evaluate.py evaluation/runs/blind-r1.json --strict
 python3 -I tools/prepare_eval.py /tmp/securepr-fresh-packet
 ```
 

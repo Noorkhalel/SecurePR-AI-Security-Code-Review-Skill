@@ -151,6 +151,14 @@ Read [SECURITY.md](SECURITY.md) and the [self-review](docs/security-review.md).
 
 ## Validation
 
+The [1.0.1 adversarial audit](AUDIT.md) found and repaired parser, evidence-fidelity
+and scoring defects despite the original passing tests. It documents new regression
+cases, remediation trials and the limits of each measurement. Fresh reviews of 63
+new synthetic cases scored TP 26 / FP 2 / TN 29 / FN 2 under strict CWE/location
+matching (precision, recall and F1: 0.928571). Two mismatches were taxonomy
+disagreements with correctly identified mechanisms; raw results remain unchanged.
+These are not production accuracy estimates.
+
 See [EVALUATION.md](EVALUATION.md) for commands, raw observations, scoring rules,
 failures found and repairs. The first blinded run on 49 synthetic cases measured
 25 TP, 0 FP, 18 TN and 0 FN; all 6 ambiguous cases requested context. These small,

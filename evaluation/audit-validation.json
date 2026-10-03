@@ -1,0 +1,285 @@
+{
+  "date": "2026-10-03",
+  "notice": "Executed trusted SecurePR tooling and authored in-memory fix demonstrations only; target corpus was not executed.",
+  "python": "Python 3.12.14",
+  "node": "v24.19.0",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/unit",
+        "-v"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0,
+      "summary": [
+        "----------------------------------------------------------------------",
+        "Ran 86 tests in 0.030s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/check_project.py"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0,
+      "summary": {
+        "valid": true,
+        "files_checked": 344,
+        "local_markdown_links_checked": 80,
+        "corpus_cases": 112,
+        "errors": []
+      }
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/evaluate.py",
+        "evaluation/runs/blind-r1.json",
+        "--strict"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0,
+      "summary": {
+        "cases": 49,
+        "true_positives": 25,
+        "false_positives": 0,
+        "true_negatives": 18,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "ambiguous_abstentions": 6,
+        "ambiguous_missing_followup": 0,
+        "safe_manual_review_cases": 0,
+        "recommendation_conflicts": 0,
+        "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+      }
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "scripts/securepr.py",
+        "validate-report",
+        ".",
+        "examples/review.json"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0,
+      "summary": {
+        "valid": true,
+        "findings": 1,
+        "notice": "Structure and quoted evidence verified. Reasoning, CWE semantics, completeness and revision identity need human/agent review."
+      }
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/evaluate.py",
+        "evaluation/runs/audit-r1.json",
+        "--manifest",
+        "tests/expected/audit.json",
+        "--strict"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0,
+      "summary": {
+        "cases": 53,
+        "true_positives": 23,
+        "false_positives": 0,
+        "true_negatives": 24,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "ambiguous_abstentions": 6,
+        "ambiguous_missing_followup": 0,
+        "safe_manual_review_cases": 0,
+        "recommendation_conflicts": 0,
+        "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+      }
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/evaluate.py",
+        "evaluation/runs/workflows-r1.json",
+        "--manifest",
+        "tests/expected/workflows.json"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0,
+      "summary": {
+        "cases": 10,
+        "true_positives": 3,
+        "false_positives": 2,
+        "true_negatives": 5,
+        "false_negatives": 2,
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "ambiguous_abstentions": 0,
+        "ambiguous_missing_followup": 0,
+        "safe_manual_review_cases": 0,
+        "recommendation_conflicts": 0,
+        "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+      }
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "tools/evaluate.py",
+        "evaluation/runs/workflows-r1.json",
+        "--manifest",
+        "tests/expected/workflows.json",
+        "--strict"
+      ],
+      "variant": null,
+      "expected_exit": 1,
+      "exit": 1,
+      "summary": {
+        "cases": 10,
+        "true_positives": 3,
+        "false_positives": 2,
+        "true_negatives": 5,
+        "false_negatives": 2,
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "ambiguous_abstentions": 0,
+        "ambiguous_missing_followup": 0,
+        "safe_manual_review_cases": 0,
+        "recommendation_conflicts": 0,
+        "limits": "Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review."
+      }
+    },
+    {
+      "command": [
+        "node",
+        "examples/fix-mode/regression.test.mjs"
+      ],
+      "variant": "before",
+      "expected_exit": 1,
+      "exit": 1,
+      "tests": 6,
+      "passed": 4,
+      "failed": 2,
+      "failed_assertions": [
+        "\u2716 another owner in the same tenant is denied; records and actor remain unchanged (1.430219ms)",
+        "\u2716 same owner in another tenant is denied; records and actor remain unchanged (0.947949ms)",
+        "\u2716 failing tests:",
+        "\u2716 another owner in the same tenant is denied; records and actor remain unchanged (1.430219ms)",
+        "\u2716 same owner in another tenant is denied; records and actor remain unchanged (0.947949ms)"
+      ]
+    },
+    {
+      "command": [
+        "node",
+        "examples/fix-mode/regression.test.mjs"
+      ],
+      "variant": "after",
+      "expected_exit": 0,
+      "exit": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "failed_assertions": []
+    },
+    {
+      "command": [
+        "node",
+        "examples/audit-fix-mode/mass-assignment/regression.test.mjs"
+      ],
+      "variant": "before",
+      "expected_exit": 1,
+      "exit": 1,
+      "tests": 9,
+      "passed": 6,
+      "failed": 3,
+      "failed_assertions": [
+        "\u2716 a request containing protected role is rejected without a partial update (1.689352ms)",
+        "\u2716 a request containing protected tenantId is rejected without a partial update (0.349405ms)",
+        "\u2716 a request containing protected creditCents is rejected without a partial update (0.300823ms)",
+        "\u2716 failing tests:",
+        "\u2716 a request containing protected role is rejected without a partial update (1.689352ms)",
+        "\u2716 a request containing protected tenantId is rejected without a partial update (0.349405ms)",
+        "\u2716 a request containing protected creditCents is rejected without a partial update (0.300823ms)"
+      ]
+    },
+    {
+      "command": [
+        "node",
+        "examples/audit-fix-mode/mass-assignment/regression.test.mjs"
+      ],
+      "variant": "after",
+      "expected_exit": 0,
+      "exit": 0,
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "failed_assertions": []
+    },
+    {
+      "command": [
+        "node",
+        "examples/audit-fix-mode/checkout-price/regression.test.mjs"
+      ],
+      "variant": "before",
+      "expected_exit": 1,
+      "exit": 1,
+      "tests": 8,
+      "passed": 6,
+      "failed": 2,
+      "failed_assertions": [
+        "\u2716 a client amount cannot change the charged amount or the stored quote (1.378443ms)",
+        "\u2716 an invalid server quote cannot be replaced by a client amount (0.371267ms)",
+        "\u2716 failing tests:",
+        "\u2716 a client amount cannot change the charged amount or the stored quote (1.378443ms)",
+        "\u2716 an invalid server quote cannot be replaced by a client amount (0.371267ms)"
+      ]
+    },
+    {
+      "command": [
+        "node",
+        "examples/audit-fix-mode/checkout-price/regression.test.mjs"
+      ],
+      "variant": "after",
+      "expected_exit": 0,
+      "exit": 0,
+      "tests": 8,
+      "passed": 8,
+      "failed": 0,
+      "failed_assertions": []
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "variant": null,
+      "expected_exit": 0,
+      "exit": 0
+    }
+  ]
+}

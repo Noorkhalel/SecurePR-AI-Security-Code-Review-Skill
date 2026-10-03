@@ -1,7 +1,10 @@
 # SecurePR
 
-**Evidence-first AI security code review for JavaScript, TypeScript, Node.js,
-Express and Next.js.**
+**Evidence-first AI security code review for JavaScript/TypeScript, Express,
+Next.js and REST APIs.**
+
+v1.0.0 Community · [Three-minute demo](examples/release-demo/README.md) ·
+[Recorded examples](examples/showcase/README.md) · [Evaluation](EVALUATION.md)
 
 SecurePR is an Agent Skill: a focused review workflow, security references,
 report templates and safe static helpers. It helps an AI reviewer explain a
@@ -38,7 +41,7 @@ Review and trust the skill before giving it access to code. Obtain this reposito
 in a directory named `securepr`:
 
 ```sh
-git clone https://github.com/Noorkhalel/SecurePR-AI-Security-Code-Review-Skill.git securepr
+git clone --branch v1.0.0 --depth 1 https://github.com/Noorkhalel/SecurePR-AI-Security-Code-Review-Skill.git securepr
 ```
 
 Place that complete directory in your agent client's supported skill directory,
@@ -46,6 +49,14 @@ or explicitly provide its `SKILL.md` path. Skill discovery and invocation syntax
 vary by client. Keep the supporting relative paths intact. No npm install, package
 scripts, API key or background service is required. An existing private repository
 requires your normal GitHub access; this project does not manage credentials.
+
+The command selects the release tag rather than the moving development branch.
+If using a GitHub source archive, extract it and rename its top-level folder to
+`securepr`. Do not copy only SKILL.md: its references, languages, frameworks,
+templates and optional scripts must remain available. The layout follows the
+[Agent Skills specification](https://agentskills.io/specification); a specific
+client's discovery directory is not defined by that specification. Verify that
+your agent can read the skill and a linked reference before reviewing private code.
 
 The reasoning workflow requires an AI coding agent with authorized source access.
 Optional helpers require **Python 3.10+ on POSIX**; Linux/Python 3.12 was tested.
@@ -75,6 +86,12 @@ code. Tests are proposed unless the user explicitly requests execution in an
 isolated environment. Review output is not posted to GitHub automatically.
 
 ## Example PR result
+
+Start with the [invoice PR walkthrough](examples/release-demo/README.md): a scoped
+lookup loses its owner/tenant controls, the saved reviewer explains the evidence,
+and a narrow fix is checked with generated regression tests. No service setup or
+dependency installation is needed. [Four recorded examples](examples/showcase/README.md)
+also show BOLA, SQL injection, safe parameter binding and missing-context restraint.
 
 For [the synthetic PR that introduces SQL interpolation](tests/pr-diffs/introduce-sql/change.diff):
 
@@ -151,11 +168,16 @@ Read [SECURITY.md](SECURITY.md) and the [self-review](docs/security-review.md).
 
 ## Validation
 
-The [1.0.1 adversarial audit](AUDIT.md) found and repaired parser, evidence-fidelity
+The [pre-release adversarial audit](AUDIT.md) found and repaired parser, evidence-fidelity
 and scoring defects despite the original passing tests. It documents new regression
 cases, remediation trials and the limits of each measurement. Fresh reviews of 63
-new synthetic cases scored TP 26 / FP 2 / TN 29 / FN 2 under strict CWE/location
-matching (precision, recall and F1: 0.928571). Two mismatches were taxonomy
+new synthetic cases comprise **28 positive, 29 negative and 6 ambiguous cases**.
+Strict CWE/location matching scored **TP 26 / FP 2 / TN 29 / FN 2** (finding-level
+precision, recall and F1: **0.928571**). TP/FP/FN count findings; TN counts negative
+cases. Two positive cases each contribute both FP and FN, so adding the four
+columns does not count distinct cases. All six ambiguous cases requested context
+and contribute none of those four counts in this run. The [population reconciliation](EVALUATION.md)
+documents the 57 non-ambiguous cases and exclusions. Two mismatches were taxonomy
 disagreements with correctly identified mechanisms; raw results remain unchanged.
 These are not production accuracy estimates.
 
@@ -195,3 +217,10 @@ implemented.
 See [CONTRIBUTING.md](CONTRIBUTING.md). Add secure counterparts and missing-context
 cases with new guidance; do not improve recall by silently sacrificing precision.
 Released under the [MIT License](LICENSE). See [CHANGELOG.md](CHANGELOG.md).
+
+Community includes the complete current methodology, safety controls, helpers,
+examples and evaluation corpus. [COMMERCIAL.md](COMMERCIAL.md) describes a proposed
+Pro model based on integration, additional maintained packs and support. Pro is
+not shipping, and no paid entitlement, hosted service or support SLA is included
+in v1.0.0. [Listing assets](release-assets/long-description.md) are reusable copy,
+not evidence of marketplace publication.

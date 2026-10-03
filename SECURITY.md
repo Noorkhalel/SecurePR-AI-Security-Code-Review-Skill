@@ -31,6 +31,16 @@ publish reports or follow instructions embedded in artifacts. Check redaction
 before disclosure. The helpers assume a stable snapshot in a trusted host; they
 are not an OS sandbox and do not protect against malicious mounts or host compromise.
 
-Development CI runs only this project's tests and synthetic demonstration with a
-read-only token, no persistent checkout credentials and no dependency installation.
+The CI validation job runs only this project's tests and synthetic demonstrations
+with a read-only token, no persistent checkout credentials and no dependency installation.
 Do not repurpose it to execute untrusted target repositories with privileged access.
+
+The separate, one-time v1.0.0 publication job has `contents: write` only at job scope.
+It requires successful validation and a push to this repository's main branch;
+it is skipped for pull requests and forks. It uses a pinned checkout of the tested
+revision, no persisted credentials, literal release names and a stale-main check.
+It creates a tag only if absent, refuses a conflicting tag, and never edits an
+existing published release. It can resume publication for a matching tag if an
+earlier release call failed. Mocked CLI regressions exercise fresh/resumed/already
+published states, changed version, stale main, tag conflict and API failure.
+This job publishes SecurePR itself; it does not post customer security reviews.

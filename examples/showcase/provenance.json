@@ -1,0 +1,41 @@
+{
+  "description": "Exact historical output extracts; selected for presentation, excluded from new audit metrics.",
+  "cases": [
+    {
+      "id": "case-010",
+      "directory": "examples/showcase/bola",
+      "run": "evaluation/runs/blind-r1.json",
+      "source_files": {
+        "CONTEXT.md": "tests/vulnerable/object-owner/CONTEXT.md",
+        "app.js": "tests/vulnerable/object-owner/app.js"
+      }
+    },
+    {
+      "id": "case-001",
+      "directory": "examples/showcase/sql-injection",
+      "run": "evaluation/runs/blind-r1.json",
+      "source_files": {
+        "CONTEXT.md": "tests/vulnerable/sql-construction/CONTEXT.md",
+        "app.js": "tests/vulnerable/sql-construction/app.js"
+      }
+    },
+    {
+      "id": "case-021",
+      "directory": "examples/showcase/secure-sql",
+      "run": "evaluation/runs/blind-r1.json",
+      "source_files": {
+        "CONTEXT.md": "tests/secure/bound-sql/CONTEXT.md",
+        "app.js": "tests/secure/bound-sql/app.js"
+      }
+    },
+    {
+      "id": "case-036",
+      "directory": "examples/showcase/missing-context",
+      "run": "evaluation/runs/blind-r1.json",
+      "source_files": {
+        "CONTEXT.md": "tests/ambiguous/missing-auth-wrapper/CONTEXT.md",
+        "route.js": "tests/ambiguous/missing-auth-wrapper/route.js"
+      }
+    }
+  ]
+}

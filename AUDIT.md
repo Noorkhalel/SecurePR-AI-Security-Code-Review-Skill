@@ -1,4 +1,7 @@
-# Adversarial release audit — 1.0.1
+# Pre-release adversarial audit
+
+Historical working label: 1.0.1. This audit preceded the first public v1.0.0
+release; no earlier tag or GitHub Release existed when release preparation began.
 
 Date: 2026-10-03. Starting revision:
 `4a9201ba1a6aa87f2526ac65723f8a264add75a0`.
@@ -119,9 +122,30 @@ review and normalized to the packet format before snapshot hashes were taken.
 | Supplemental workflows | 10 | 3 | 2 | 5 | 2 | 0.6 | 0.6 | 0.6 |
 | Combined new cases | 63 | 26 | 2 | 29 | 2 | 0.928571 | 0.928571 | 0.928571 |
 
+**Counting units:** this is a finding-match score with a case-level TN count,
+not a mutually exclusive case confusion matrix. The 63 distinct cases are
+**28 positive + 29 definite negative + 6 ambiguous**. Of the 57 non-ambiguous
+cases, 26 positive cases match, two positive cases each contribute both one FP
+and one FN (case-209 and case-210), and 29 negative cases contribute TN.
+Thus `26 + 2 + 29 + 2 = 59` is a mixed-unit sum that counts those two cases twice;
+it is not 59 classified cases. All 63 cases were reviewed and scored for their
+applicable outcomes; none were silently dropped.
+
+The runs contain 28 expected findings and 28 reported findings: 26 matched,
+two unmatched reports and two unmatched expectations. Finding-level precision is
+`26/28`, recall is `26/28`, and F1 is `52/56`, each **0.9285714285714286**.
+No finding was reported in the six ambiguous cases, so they overlap with none
+of TP/FP/TN/FN in these saved runs. Their abstention and context-request results
+are measured separately. The scorer would count an unsupported finding on an
+ambiguous case as FP; ambiguity is not a blanket exclusion from scrutiny.
+See the [machine-reconciled population](evaluation/runs/release-population.json),
+reproduced with `python3 -I tools/release_population.py --check`.
+
 All six ambiguous cases abstained and requested specific context. Both runs had
 zero safe-case manual-review flags and zero internally contradictory PR verdicts.
-Historical cases and two later prompt mutations are excluded from these totals.
+The 49 historical cases, two later prompt mutations, release demonstrations and
+curated example extracts are excluded from these totals. There are 112 cases
+across the three expected manifests; the audit aggregate covers only its 63 new cases.
 These are strict CWE/file/near-line match metrics, not severity, real-world
 exploitability or production accuracy measurements.
 

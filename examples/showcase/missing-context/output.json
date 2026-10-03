@@ -1,0 +1,8 @@
+{
+  "id": "case-036",
+  "findings": [],
+  "manual_review": [
+    "MEDIUM CONFIDENCE: route.js:3 looks up a private invoice by the caller-selected id, but protectedRoute, database extensions and row-security rules are missing. Supply those controls and actor/ownership policy to determine whether every lookup is restricted to the authorized owner or tenant."
+  ],
+  "recommendation": null
+}

@@ -79,6 +79,22 @@ def check():
                 key='cases/'+case['id']+'/'+filename
                 actual=hashlib.sha256((ROOT/case['path']/filename).read_bytes()).hexdigest()
                 if actual!=snapshot['files'].get(key):errors.append('changed reviewed fixture '+key)
+    # Release presentation must preserve actual observations and reviewed inputs.
+    showcase=s.load_json((ROOT/'examples/showcase/provenance.json').read_bytes())
+    for entry in showcase['cases']:
+        run=s.load_json((ROOT/entry['run']).read_bytes())
+        original=next(c for c in run['cases'] if c['id']==entry['id'])
+        copied=s.load_json((ROOT/entry['directory']/'output.json').read_bytes())
+        if original!=copied:errors.append('altered showcase observation '+entry['id'])
+        for destination, source in entry['source_files'].items():
+            if (ROOT/entry['directory']/destination).read_bytes()!=(ROOT/source).read_bytes():
+                errors.append('altered showcase input '+entry['id'])
+    demo=ROOT/'examples/release-demo'
+    provenance=s.load_json((demo/'provenance.json').read_bytes())
+    for name, expected_hash in provenance['files'].items():
+        if hashlib.sha256((demo/name).read_bytes()).hexdigest()!=expected_hash:
+            errors.append('changed release demo artifact '+name)
+    if (ROOT/'VERSION').read_text()!='1.0.0\n':errors.append('release version mismatch')
     module=ast.parse((ROOT/'scripts/securepr.py').read_text())
     for node in ast.walk(module):
         if isinstance(node,ast.Import) and any(n.name.split('.')[0] in {'subprocess','socket','requests','http','urllib'} for n in node.names):errors.append('unsafe runtime import')

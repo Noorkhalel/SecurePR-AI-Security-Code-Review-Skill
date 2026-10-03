@@ -1,0 +1,106 @@
+// Trusted, authored in-memory model tests; imports no input-packet module.
+// MODEL=before selects a hand-authored transcription of the reviewed head logic.
+// MODEL=after (default) selects the generated fixed service.
+// These adapters model CONTEXT.md, not an actual Express/ORM integration.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { getInvoice as fixedGetInvoice } from './service.fixed.mjs';
+
+const mode = process.env.MODEL ?? 'after';
+assert.ok(['before', 'after'].includes(mode), 'MODEL must be before or after');
+
+async function reviewedHeadModel(actor, id, db) {
+  if (!actor) return null;
+  return db.invoice.findFirst({ where: { id } });
+}
+const getInvoice = mode === 'before' ? reviewedHeadModel : fixedGetInvoice;
+const actor = Object.freeze({ id: 'owner-a', tenantId: 'tenant-a' });
+
+function makeStore() {
+  const rows = [
+    { id: 'own-invoice', ownerId: 'owner-a', tenantId: 'tenant-a', total: 120 },
+    { id: 'other-owner', ownerId: 'owner-b', tenantId: 'tenant-a', total: 230 },
+    { id: 'other-tenant', ownerId: 'owner-a', tenantId: 'tenant-b', total: 340 },
+    { id: 'other-both', ownerId: 'owner-b', tenantId: 'tenant-b', total: 450 },
+  ];
+  const original = structuredClone(rows);
+  let calls = 0;
+  const db = {
+    invoice: {
+      async findFirst({ where }) {
+        calls += 1;
+        const hit = rows.find(row => Object.entries(where).every(
+          ([key, value]) => Object.hasOwn(row, key) && row[key] === value,
+        ));
+        return hit ? structuredClone(hit) : null;
+      },
+    },
+  };
+  return { db, rows, original, calls: () => calls };
+}
+
+// Trusted route/session adapter: sessions are synthetic server-side fixtures,
+// and the caller supplies only the selected ID. No HTTP listener is started.
+async function responseFor(session, id, db) {
+  if (!session || !session.valid) {
+    return { status: 401, body: { error: 'Unauthorized' } };
+  }
+  const invoice = await getInvoice(session.user, id, db);
+  return invoice
+    ? { status: 200, body: { id: invoice.id, total: invoice.total } }
+    : { status: 404, body: { error: 'Not found' } };
+}
+const validSession = Object.freeze({ valid: true, user: actor });
+
+test(`${mode}: owner in correct tenant receives intended invoice`, async () => {
+  const store = makeStore();
+  assert.deepEqual(await responseFor(validSession, 'own-invoice', store.db), {
+    status: 200, body: { id: 'own-invoice', total: 120 },
+  });
+  assert.equal(store.calls(), 1);
+  assert.deepEqual(store.rows, store.original);
+});
+
+for (const [label, id] of [
+  ['different owner in same tenant', 'other-owner'],
+  ['same owner in different tenant', 'other-tenant'],
+  ['different owner and tenant', 'other-both'],
+]) {
+  test(`${mode}: deny ${label} without disclosure or mutation`, async () => {
+    const store = makeStore();
+    const response = await responseFor(validSession, id, store.db);
+    assert.deepEqual(store.rows, store.original);
+    assert.deepEqual(response, { status: 404, body: { error: 'Not found' } });
+    assert.equal(Object.hasOwn(response.body, 'id'), false);
+    assert.equal(Object.hasOwn(response.body, 'total'), false);
+  });
+}
+
+test(`${mode}: unknown invoice has identical non-disclosing denial`, async () => {
+  const store = makeStore();
+  assert.deepEqual(await responseFor(validSession, 'absent-invoice', store.db), {
+    status: 404, body: { error: 'Not found' },
+  });
+  assert.deepEqual(store.rows, store.original);
+});
+
+for (const [label, session] of [
+  ['absent session', null],
+  ['invalid session', { valid: false, user: actor }],
+]) {
+  test(`${mode}: ${label} stops before database access`, async () => {
+    const store = makeStore();
+    assert.deepEqual(await responseFor(session, 'own-invoice', store.db), {
+      status: 401, body: { error: 'Unauthorized' },
+    });
+    assert.equal(store.calls(), 0);
+    assert.deepEqual(store.rows, store.original);
+  });
+}
+
+test(`${mode}: absent service actor returns null without database access`, async () => {
+  const store = makeStore();
+  assert.equal(await getInvoice(null, 'own-invoice', store.db), null);
+  assert.equal(store.calls(), 0);
+  assert.deepEqual(store.rows, store.original);
+});

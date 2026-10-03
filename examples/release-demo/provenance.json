@@ -1,0 +1,23 @@
+{
+  "kind": "single-case release demonstration, not a scored benchmark",
+  "date": "2026-10-03",
+  "skill_sha256": "b4fc642fd7239317a617d8266c5362483aa018947853141d42229fc1ddb718bd",
+  "reviewer": "Fresh-context agent; exact provider model/version not exposed; same inherited session family",
+  "prompt": "Use the trusted packet skill to review the supplied PR against the task-authored synthetic contract, then produce a scoped fix and built-in-only regression tests. No original repository or expected answer supplied.",
+  "raw_review_sha256": "583a8926261cf09432085ab978be4509462a92055572258442c46d28486fc368",
+  "generated_test_sha256": "f860674f5fe5bd1e6c2e68f7f00efd28227c0e36dd74b8bf199c319f594ece70",
+  "release_adaptation": "Runnable regression keeps generated behavior assertions, replaces the handwritten before service and route model with literal imports of reviewed synthetic head/fixed modules and in-memory route/session adapters. No real framework/database integration.",
+  "files": {
+    "CONTEXT.md": "4d6cfd0a45633ca5adccf421bc4bbfc27804f6f3cdcd6a4a457c176408d55c28",
+    "base/routes.mjs": "8eab1b6b3ab62f70b27f7ebb4a52b1f269933ca8e545d022b9b1ec65b00c4677",
+    "base/service.mjs": "4625cb30ed2eafea1b3f7d5e59996b1bf9e012b4b91f7ab520ab3fe2c6469d8f",
+    "change.diff": "be560d25780756142bcd6d8bf3e1ceafddcef3d78aa5c0c75ce29546d45a3b69",
+    "fixed/routes.mjs": "8eab1b6b3ab62f70b27f7ebb4a52b1f269933ca8e545d022b9b1ec65b00c4677",
+    "fixed/service.mjs": "1dde8478bf7e919ea57318ca981911c4dde7e640b2591792bb9ffc9756f60c76",
+    "generated-regression.txt": "f860674f5fe5bd1e6c2e68f7f00efd28227c0e36dd74b8bf199c319f594ece70",
+    "head/routes.mjs": "8eab1b6b3ab62f70b27f7ebb4a52b1f269933ca8e545d022b9b1ec65b00c4677",
+    "head/service.mjs": "8173e01d9d17f60150c3b45af77cd1a2820e0118f6a2641af960c2b100d62b37",
+    "regression.test.mjs": "6223223389eb01c521bce39294db596208530966a72db8e46ec24843a801b35f",
+    "review.md": "583a8926261cf09432085ab978be4509462a92055572258442c46d28486fc368"
+  }
+}

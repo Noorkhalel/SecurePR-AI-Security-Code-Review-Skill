@@ -1,0 +1,17 @@
+{
+  "id": "case-010",
+  "findings": [
+    {
+      "cwe": "CWE-639",
+      "file": "app.js",
+      "line": 3,
+      "confidence": "CONFIRMED",
+      "reason": "Static evidence: requireSession authenticates the caller, but findUnique selects solely by the caller's route ID at line 3 and returns the invoice at line 5. The contract establishes owner-private invoices, knowable other-user IDs, ordinary Prisma behavior, and no row security. No owner check or owner-scoped query protects the read, so authentication does not enforce invoice ownership.",
+      "source": "Authenticated user selecting req.params.id for another owner's invoice",
+      "sink": "Unscoped db.invoice.findUnique at app.js:3 and invoice response at line 5",
+      "remediation": "Fetch the invoice using both the requested ID and server-verified req.user.id as ownerId, and enforce tenant scope if required by the model. Return the same not-found response when the caller lacks access."
+    }
+  ],
+  "manual_review": [],
+  "recommendation": null
+}

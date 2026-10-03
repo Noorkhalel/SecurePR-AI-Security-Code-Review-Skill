@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-03",
+  "scope": "Public documentation URLs only; release-tag links verified after publication. HEAD reachability is not content validation or permanent uptime assurance.",
+  "results": [
+    {
+      "url": "https://agentskills.io/specification",
+      "status": 200,
+      "final_url": "https://agentskills.io/specification"
+    },
+    {
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "status": 200,
+      "final_url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    },
+    {
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html",
+      "status": 200,
+      "final_url": "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+    },
+    {
+      "url": "https://cwe.mitre.org/data/definitions/639.html",
+      "status": 200,
+      "final_url": "https://cwe.mitre.org/data/definitions/639.html"
+    },
+    {
+      "url": "https://cwe.mitre.org/data/definitions/863.html",
+      "status": 200,
+      "final_url": "https://cwe.mitre.org/data/definitions/863.html"
+    },
+    {
+      "url": "https://cwe.mitre.org/data/definitions/915.html",
+      "status": 200,
+      "final_url": "https://cwe.mitre.org/data/definitions/915.html"
+    },
+    {
+      "url": "https://expressjs.com/en/advanced/best-practice-security/",
+      "status": 200,
+      "final_url": "https://expressjs.com/en/advanced/best-practice-security/"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/behind-proxies/",
+      "status": 200,
+      "final_url": "https://expressjs.com/en/guide/behind-proxies/"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/using-middleware/",
+      "status": 200,
+      "final_url": "https://expressjs.com/en/guide/using-middleware/"
+    },
+    {
+      "url": "https://nextjs.org/docs/app/guides/authentication",
+      "status": 200,
+      "final_url": "https://nextjs.org/docs/app/guides/authentication"
+    },
+    {
+      "url": "https://nextjs.org/docs/app/guides/data-security",
+      "status": 200,
+      "final_url": "https://nextjs.org/docs/app/guides/data-security"
+    },
+    {
+      "url": "https://nodejs.org/api/child_process.html",
+      "status": 200,
+      "final_url": "https://nodejs.org/api/child_process.html"
+    },
+    {
+      "url": "https://owasp.org/API-Security/editions/2023/en/0x11-t10/",
+      "status": 200,
+      "final_url": "https://api-security.owasp.org/editions/2023/en/0x11-t10/"
+    },
+    {
+      "url": "https://owasp.org/projects/asvs",
+      "status": 200,
+      "final_url": "https://owasp.org/projects/asvs"
+    },
+    {
+      "url": "https://top10.owasp.org/2025/0x00_2025-Introduction/",
+      "status": 200,
+      "final_url": "https://top10.owasp.org/2025/0x00_2025-Introduction/"
+    }
+  ]
+}

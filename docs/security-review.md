@@ -41,7 +41,7 @@ remain coverage limits. A host able to change filesystem mounts or the output
 parent concurrently is outside the trusted snapshot/parent contract.
 
 Scoring uses one-to-one CWE/file/near-line matches. The bundled corpus has one
-expected finding per positive case; the 1.0.1 audit replaced order-dependent
+expected finding per positive case; the pre-release audit replaced order-dependent
 matching with maximum bipartite matching and an overlapping-anchor regression.
 Scores do not measure severity calibration, complete
 report quality, production reachability or fix integration. The synthetic fix test

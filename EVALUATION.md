@@ -1,13 +1,62 @@
 # Evaluation
 
-The original 1.0.0 results below are preserved as historical evidence. The
-[1.0.1 adversarial audit](AUDIT.md) records newly found defects, repairs, expanded
+The original implementation results below are preserved as historical evidence. The
+[pre-release adversarial audit](AUDIT.md) records newly found defects, repairs, expanded
 tests and their limitations. Its 63 new first-pass cases score TP 26 / FP 2 / TN 29 /
 FN 2, with precision/recall/F1 0.928571 under strict label/location matching. The
 two workflow taxonomy disagreements are preserved and explained in the audit.
-The passing historical result did not prevent those defects.
+The passing historical result did not prevent those defects. The former 1.0.0
+and 1.0.1 headings were pre-release working labels, not published releases.
 
-## Original 1.0.0 evaluation
+## Release population reconciliation
+
+Public v1.0.0 preparation retains the audited methodology and frozen observations.
+The [release execution record](evaluation/release-validation.json) reports the
+rerun gates: 87 Python tests (including seven mocked publication scenarios in one
+new test method), 31 passing fixed-version Node assertions across four demos,
+evidence/integrity/local-link checks and all three saved evaluation replays.
+The four before versions intentionally fail ten denial/integrity assertions in
+total; the new demo contributes three. The workflow replay intentionally exits 1
+under `--strict`, retaining its two recorded mismatches. That is an expected
+evaluation result, not a failed release gate or a new model run.
+
+[Public-link checks](evaluation/release-links.json) reached all 15 cited external
+documentation URLs on 2026-10-03. This does not establish future uptime. The new
+[demo](examples/release-demo/README.md) has a separate fresh review and provenance;
+its test adapters do not establish real framework/database integration.
+
+| Population | Positive cases | Definite negative cases | Ambiguous cases | Unique total |
+| --- | ---: | ---: | ---: | ---: |
+| New adversarial corpus | 23 | 24 | 6 | 53 |
+| Supplemental workflows | 5 | 5 | 0 | 10 |
+| New audit aggregate | 28 | 29 | 6 | 63 |
+| Historical implementation (excluded from aggregate) | 25 | 18 | 6 | 49 |
+
+TP/FP/FN count **findings**, while TN counts **definite negative cases**. These
+columns must not be added to infer a case count. The two taxonomy mismatches
+(case-209 and case-210) each produce one FP and one FN. There are **57 distinct
+non-ambiguous cases**, not 59; the six ambiguous cases contribute no findings and
+no TN in the saved audit runs, and all six request context. They are evaluated
+separately for abstention/follow-up, not silently excluded. A reported finding on
+an ambiguous case would still count as an unmatched FP under this scorer.
+
+The audit contains 28 expected and 28 reported material findings. Precision =
+26/(26+2), recall = 26/(26+2), F1 = 52/(52+2+2): each **0.9285714285714286**
+(92.8571%). These are strict finding-match results for the two new synthetic runs,
+not case accuracy, model reruns or an estimate of production performance.
+The 49 historical cases, two later qualitative prompt mutations, release demo and
+curated showcase extracts are outside this aggregate. No measured labels or raw
+observations were changed for the release.
+
+[Population artifact](evaluation/runs/release-population.json) lists case IDs,
+overlaps and exclusions. Recalculate or verify it:
+
+```sh
+python3 -I tools/release_population.py
+python3 -I tools/release_population.py --check
+```
+
+## Original implementation evaluation
 
 On 2026-10-02, three fresh-context agents used the trusted skill to review disjoint
 batches of 49 synthetic cases. They received neutral case IDs, source files and
@@ -60,7 +109,7 @@ definite negative cases. Ambiguous abstention and follow-up are separate. All ca
 IDs must be present exactly once. Precision = TP/(TP+FP); recall = TP/(TP+FN);
 F1 = 2TP/(2TP+FP+FN). Undefined ratios are null, not fabricated perfect scores.
 The scorer does not grade severity or automatically verify natural-language reasoning.
-Version 1.0.1 additionally counts safe-case manual-review noise and internally
+The pre-release audit additionally counts safe-case manual-review noise and internally
 contradictory PR recommendations. `--strict` returns exit 1 for any unmatched or
 missed finding, missing ambiguous follow-up, safe-case noise or contradictory PR
 verdict. Without it, a valid score is returned even when detection is poor. Invalid

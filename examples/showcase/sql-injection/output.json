@@ -1,0 +1,17 @@
+{
+  "id": "case-001",
+  "findings": [
+    {
+      "cwe": "CWE-89",
+      "file": "app.js",
+      "line": 4,
+      "confidence": "CONFIRMED",
+      "reason": "Static evidence: the public route takes arbitrary req.query.term at line 3 and concatenates it into a quoted SQL expression executed by node-postgres at line 4. There is no binding or input guard, so caller data can alter query syntax; the result is returned at line 5. The supplied contract resolves driver and reachability assumptions.",
+      "source": "Public caller-controlled req.query.term",
+      "sink": "db.query executes interpolated SELECT SQL at app.js:4",
+      "remediation": "Use db.query('SELECT title FROM catalog WHERE title = $1', [term]) and validate that term is a string. Keep user input exclusively in bound values."
+    }
+  ],
+  "manual_review": [],
+  "recommendation": null
+}

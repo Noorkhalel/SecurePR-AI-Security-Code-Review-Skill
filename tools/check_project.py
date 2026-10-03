@@ -47,20 +47,25 @@ def check():
     skill=(ROOT/'SKILL.md').read_text()
     if not skill.startswith('---\nname: securepr\ndescription: ') or len(skill.splitlines())>500:errors.append('invalid skill frontmatter/size')
     if len(skill.splitlines()[2].removeprefix('description: '))>1024:errors.append('description too long')
-    manifest=json.loads((ROOT/'tests/expected/corpus.json').read_text())
     ids=set()
-    for case in manifest['cases']:
-        if case['id'] in ids:errors.append('duplicate case '+case['id'])
-        ids.add(case['id'])
-        for name in case['files']:
-            if not (ROOT/case['path']/name).is_file():errors.append('missing fixture '+name)
-        for finding in case['expected']:
-            lines=(ROOT/case['path']/finding['file']).read_text().splitlines()
-            if finding['anchor'] not in lines[finding['line']-1]:errors.append('stale anchor '+case['id'])
-        if case['mode']=='pr':s.parse_diff((ROOT/case['path']/'change.diff').read_bytes())
+    for manifest_path in sorted((ROOT/'tests/expected').glob('*.json')):
+        manifest=s.load_json(manifest_path.read_bytes())
+        for case in manifest['cases']:
+            if case['id'] in ids:errors.append('duplicate case '+case['id'])
+            ids.add(case['id'])
+            s.relpath(case['path'])
+            for name in case['files']:
+                s.relpath(name)
+                if not (ROOT/case['path']/name).is_file():errors.append('missing fixture '+name)
+            for finding in case['expected']:
+                if finding['file'] not in case['files']:errors.append('unlisted evidence '+case['id'])
+                lines=(ROOT/case['path']/finding['file']).read_text().splitlines()
+                if finding['anchor'] not in lines[finding['line']-1]:errors.append('stale anchor '+case['id'])
+            if case['mode']=='pr':s.parse_diff((ROOT/case['path']/'change.diff').read_bytes())
     module=ast.parse((ROOT/'scripts/securepr.py').read_text())
     for node in ast.walk(module):
         if isinstance(node,ast.Import) and any(n.name.split('.')[0] in {'subprocess','socket','requests','http','urllib'} for n in node.names):errors.append('unsafe runtime import')
+        if isinstance(node,ast.ImportFrom) and (node.module or '').split('.')[0] in {'subprocess','socket','requests','http','urllib'}:errors.append('unsafe runtime import')
         if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id in {'eval','exec','compile','__import__'}:errors.append('dynamic runtime execution')
     with s.SafeTree(ROOT) as tree:s.validate_report(tree,s.load_json((ROOT/'examples/review.json').read_bytes()))
     return {'valid':not errors,'files_checked':count,'local_markdown_links_checked':links,'corpus_cases':len(ids),'errors':errors}

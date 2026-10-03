@@ -12,7 +12,7 @@ import re
 import stat
 import sys
 
-VERSION = '1.0.0'
+VERSION = '1.0.0'  # Report contract version; independent of skill release version.
 MAX_FILE = 1024 * 1024
 MAX_JSON = 4 * 1024 * 1024
 MAX_DIFF = 2 * 1024 * 1024
@@ -44,7 +44,7 @@ class Rejected(ValueError):
 def relpath(value: str) -> tuple[str, ...]:
     if not isinstance(value, str) or not value or len(value) > 4096:
         raise Rejected('invalid relative path')
-    if any(ord(c) < 32 or ord(c) == 127 for c in value) or '\\' in value or ':' in value:
+    if any(ord(c) < 32 or ord(c) == 127 or 0xD800 <= ord(c) <= 0xDFFF for c in value) or '\\' in value or ':' in value:
         raise Rejected('path contains unsupported characters')
     parts = value.split('/')
     if value.startswith('/') or any(p in ('', '.', '..') for p in parts):
@@ -76,13 +76,14 @@ def decode(data: bytes) -> str:
 def source_lines(text: str) -> list[str]:
     """Git/editor physical lines: LF with optional CR, never Unicode separators."""
     lines = text.split('\n')
-    if lines[-1] == '':
-        lines.pop()
-    return [line[:-1] if line.endswith('\r') else line for line in lines]
+    last = len(lines) - 1
+    return [line[:-1] if i < last and line.endswith('\r') else line
+            for i, line in enumerate(lines) if not (i == last and line == '')]
 
 
 def redacted_line(line: str) -> str:
-    if SENSITIVE.search(line) or TOKEN.search(line):
+    if SENSITIVE.search(line) or TOKEN.search(line) or re.search(
+            r'(?i)^\s*[\"\']?(?:api[_-]?key|secret|password|passwd|token|authorization|cookie)[\"\']?\s*[:=]\s*\S', line):
         return '[REDACTED: potentially sensitive line]'
     # Escape invisible terminal controls without changing ordinary source text.
     return ''.join(c if (c in '\t' or (ord(c) >= 32 and ord(c) != 127
@@ -272,7 +273,7 @@ def load_json(data: bytes):
 
 def _snapshot(raw: bytes):
     lines = source_lines(decode(raw))
-    return digest(raw), safe_quote('\n'.join(lines) + '\n').split('\n'), len(lines)
+    return digest(raw), safe_quote(decode(raw)).split('\n'), len(lines)
 
 
 def _excerpt_snapshot(snapshot, name: str, start: int, end: int) -> dict:
@@ -297,6 +298,7 @@ def parse_diff(data: bytes) -> dict:
     files, current, i = [], None, 0
     seen_paths = set()
     awaiting_header = False
+    git_paths = None
     hunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(?:.*)$')
     while i < len(lines):
         line = lines[i]
@@ -304,12 +306,22 @@ def parse_diff(data: bytes) -> dict:
             if awaiting_header or (current is not None and not current['hunks']):
                 raise Rejected('metadata-only/rename/binary change requires snapshot review')
             current = None
+            header = re.fullmatch(r'diff --git a/(.+) b/(.+)', line)
+            if not header:
+                raise Rejected('unsupported Git file header')
+            git_paths = (header[1], header[2])
+            for name in git_paths:
+                relpath(name)
+                if '"' in name:
+                    raise Rejected('quoted Git paths are unsupported')
             awaiting_header = True
             i += 1
             continue
         if line.startswith(('index ', 'new file mode ', 'deleted file mode ')):
             if not awaiting_header:
                 raise Rejected('metadata outside a Git file section')
+            if not re.fullmatch(r'(?:index [0-9a-f]{4,64}\.\.[0-9a-f]{4,64}(?: [0-7]{6})?|(?:new|deleted) file mode [0-7]{6})', line):
+                raise Rejected('malformed Git metadata')
             i += 1
             continue
         if line.startswith('--- '):
@@ -326,6 +338,9 @@ def parse_diff(data: bytes) -> dict:
                 relpath(value[2:])
                 return value[2:]
             old, new = path(old, 'a'), path(new, 'b')
+            if git_paths and ((old is not None and old != git_paths[0]) or (new is not None and new != git_paths[1])):
+                raise Rejected('Git and unified file headers disagree')
+            git_paths = None
             if old is None and new is None:
                 raise Rejected('both diff paths are null')
             current = {'old_file': old, 'new_file': new, 'hunks': []}
@@ -338,15 +353,23 @@ def parse_diff(data: bytes) -> dict:
             continue
         match = hunk_re.match(line)
         if match and current is not None:
+            if any(len(value) > 10 for value in match.groups() if value is not None):
+                raise Rejected('invalid hunk coordinates')
             a, an, b, bn = (int(match[1]), int(match[2] or 1), int(match[3]), int(match[4] or 1))
             if (current['old_file'] is None and (a != 0 or an != 0)) or (current['new_file'] is None and (b != 0 or bn != 0)):
                 raise Rejected('null-file header contradicts hunk coordinates')
             if a > 10**9 or b > 10**9 or an > 100000 or bn > 100000 or (an and a < 1) or (bn and b < 1):
                 raise Rejected('invalid hunk coordinates')
+            old_begin, new_begin = a - bool(an), b - bool(bn)
+            old_end = new_end = 0
             if current['hunks']:
                 prior = current['hunks'][-1]
-                if a < prior['old_start'] + prior['old_count'] or b < prior['new_start'] + prior['new_count']:
-                    raise Rejected('overlapping/out-of-order hunks')
+                old_end = prior['old_start'] - bool(prior['old_count']) + prior['old_count']
+                new_end = prior['new_start'] - bool(prior['new_count']) + prior['new_count']
+            if old_begin < old_end or new_begin < new_end:
+                raise Rejected('overlapping/out-of-order hunks')
+            if old_begin - old_end != new_begin - new_end:
+                raise Rejected('inconsistent unchanged-line offsets')
             old_n = new_n = 0
             added, removed = [], []
             i += 1
@@ -371,6 +394,8 @@ def parse_diff(data: bytes) -> dict:
                 i += 1
             if (old_n, new_n) != (an, bn):
                 raise Rejected('truncated hunk')
+            if not added and not removed:
+                raise Rejected('hunk contains no changes')
             current['hunks'].append({'old_start': a, 'old_count': an, 'new_start': b,
                                      'new_count': bn, 'added_lines': added, 'removed_lines': removed})
             continue
@@ -532,7 +557,7 @@ def main(argv=None):
                     result = validate_report(tree, load_json(read_external(args.report)))
         print(json.dumps(result, ensure_ascii=True, indent=2, allow_nan=False))
         return 0
-    except (Rejected, OSError, RecursionError, TypeError) as exc:
+    except (Rejected, OSError, RecursionError, TypeError, UnicodeError) as exc:
         # Do not echo arbitrary source or OS error paths into diagnostics.
         message = str(exc) if isinstance(exc, Rejected) else 'artifact inaccessible or exceeds safe processing limits'
         print(json.dumps({'error': message}, ensure_ascii=True), file=sys.stderr)

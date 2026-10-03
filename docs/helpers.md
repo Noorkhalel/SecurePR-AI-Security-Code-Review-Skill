@@ -48,3 +48,13 @@ path escapes but do not sandbox the operating system, prevent malicious mounts o
 protect against an attacker already able to change the host filesystem. Permissions
 and host isolation must restrict accessible data. The helpers provide no detector,
 SARIF uploader, autonomous patcher or assurance of complete prompt-injection safety.
+
+## Audited parser behavior
+
+Diff coordinates must preserve equal unchanged-line gaps, including zero-context
+insertions/deletions. Git and unified paths must agree; metadata syntax and numeric
+lengths are bounded. This checks patch consistency, not correspondence with a
+base/head checkout. Partial, metadata-only and unsupported patches require other
+source evidence. Excerpt redaction preserves embedded control bytes as escapes;
+ordinary CRLF is one physical line ending. Unquoted credential/header lines also
+receive best-effort masking, which can hide benign configuration.

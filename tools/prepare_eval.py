@@ -15,6 +15,7 @@ s = importlib.util.module_from_spec(spec);spec.loader.exec_module(s)
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('destination', help='new directory in a trusted parent; must not already exist')
+    parser.add_argument('--manifest', default='tests/expected/corpus.json', help='trusted manifest path relative to installed skill')
     args = parser.parse_args(argv)
     dest = Path(args.destination).absolute()
     # The user chooses the output location. Do not accept a symlinked parent.
@@ -23,7 +24,7 @@ def main(argv=None):
             pass
         dest.mkdir(mode=0o700)
         with s.SafeTree(ROOT) as tree:
-            manifest = s.load_json(tree.read('tests/expected/corpus.json'))
+            manifest = s.load_json(tree.read(args.manifest))
             packets = []
             for case in manifest['cases']:
                 if not isinstance(case['id'], str) or not re.fullmatch(r'case-[0-9]{3}', case['id']):

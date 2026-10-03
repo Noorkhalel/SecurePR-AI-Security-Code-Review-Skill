@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import re
 from pathlib import Path
 import sys
 
@@ -24,10 +25,17 @@ def score(manifest, observations):
             raise securepr.Rejected('invalid manifest case mode or ambiguity flag')
         if not isinstance(case.get('expected'), list) or len(case['expected']) > 100:
             raise securepr.Rejected('invalid manifest expected findings')
+        anchors = set()
         for finding in case['expected']:
             if not isinstance(finding, dict) or not isinstance(finding.get('cwe'), str) or type(finding.get('line')) is not int or finding['line'] < 1:
                 raise securepr.Rejected('invalid expected finding')
             securepr.relpath(finding.get('file'))
+            if not re.fullmatch(r'CWE-[1-9][0-9]{0,4}', finding['cwe']):
+                raise securepr.Rejected('invalid expected CWE identifier')
+            anchor = (finding['cwe'], finding['file'], finding['line'])
+            if anchor in anchors:
+                raise securepr.Rejected('duplicate expected finding')
+            anchors.add(anchor)
         expected[case['id']] = case
     if not isinstance(observations, dict) or set(observations) != {'run', 'cases'}:
         raise securepr.Rejected('observations must contain run metadata and cases')
@@ -46,6 +54,7 @@ def score(manifest, observations):
         raise securepr.Rejected('case set must match exactly; missing/duplicate/extra cases cannot be hidden')
     tp = fp = fn = tn = ambiguous_abstentions = manual_missed = 0
     rows = []
+    safe_manual = recommendation_conflicts = 0
     for case in actual:
         securepr._object(case, {'id', 'findings', 'manual_review', 'recommendation'}, 'case observation')
         if not isinstance(case['findings'], list) or len(case['findings']) > 100:
@@ -57,7 +66,7 @@ def score(manifest, observations):
                 raise securepr.Rejected('PR observation needs merge recommendation')
         elif case['recommendation'] is not None:
             raise securepr.Rejected('non-PR recommendation must be null')
-        used, case_fp = set(), 0
+        edges = []
         for finding in case['findings']:
             securepr._object(finding, {'cwe', 'file', 'line', 'confidence', 'reason', 'source', 'sink', 'remediation'}, 'observation finding')
             for field in ('cwe', 'file', 'confidence', 'reason', 'source', 'sink', 'remediation'):
@@ -69,15 +78,38 @@ def score(manifest, observations):
                 raise securepr.Rejected('finding line must be a positive integer')
             # Match CWE + actual file + exact sink/decision anchor, allowing a small
             # source-range shift. A wrong CWE/location is an unmatched finding.
-            matches = [i for i, item in enumerate(gold['expected']) if i not in used
-                       and finding['cwe'] == item['cwe'] and finding['file'] == item['file']
+            matches = [i for i, item in enumerate(gold['expected'])
+                       if finding['cwe'] == item['cwe'] and finding['file'] == item['file']
                        and abs(finding['line'] - item['line']) <= 2]
-            if matches:
-                used.add(matches[0]); tp += 1
-            else:
-                fp += 1; case_fp += 1
-        missed = len(gold['expected']) - len(used)
+            edges.append(matches)
+        # Maximum bipartite matching prevents the first nearby observation from
+        # consuming the only gold anchor available to a later observation.
+        owners = {}
+        def augment(observation, visited):
+            for anchor in edges[observation]:
+                if anchor in visited:
+                    continue
+                visited.add(anchor)
+                if anchor not in owners or augment(owners[anchor], visited):
+                    owners[anchor] = observation
+                    return True
+            return False
+        matched = sum(augment(i, set()) for i in range(len(edges)))
+        case_fp = len(edges) - matched
+        missed = len(gold['expected']) - matched
+        tp += matched
+        fp += case_fp
         fn += missed
+        safe_noise = not gold['expected'] and not gold['manual_review_required'] and bool(case['manual_review'])
+        safe_manual += int(safe_noise)
+        conflict = False
+        if gold['mode'] == 'pr':
+            confirmed = any(f['confidence'] == 'CONFIRMED' for f in case['findings'])
+            needs_review = bool(case['findings'] or case['manual_review'])
+            conflict = ((confirmed and case['recommendation'] != securepr.RECOMMENDATIONS[2]) or
+                        (needs_review and case['recommendation'] == securepr.RECOMMENDATIONS[0]) or
+                        (not confirmed and case['recommendation'] == securepr.RECOMMENDATIONS[2]))
+            recommendation_conflicts += int(conflict)
         if not gold['expected'] and not gold['manual_review_required'] and not case['findings']:
             tn += 1
         if gold['manual_review_required']:
@@ -85,28 +117,32 @@ def score(manifest, observations):
                 ambiguous_abstentions += 1
             if not case['manual_review']:
                 manual_missed += 1
-        rows.append({'id': case['id'], 'tp': len(used), 'fp': case_fp, 'fn': missed,
+        rows.append({'id': case['id'], 'tp': matched, 'fp': case_fp, 'fn': missed,
                      'manual_review': bool(case['manual_review']),
-                     'recommendation': case['recommendation']})
+                     'recommendation': case['recommendation'], 'recommendation_conflict': conflict,
+                     'safe_manual_review': bool(safe_noise)})
     precision = tp / (tp + fp) if tp + fp else None
     recall = tp / (tp + fn) if tp + fn else None
     f1 = 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None
     return {'run': metadata, 'cases': len(actual), 'true_positives': tp, 'false_positives': fp,
             'true_negatives': tn, 'false_negatives': fn, 'precision': precision,
             'recall': recall, 'f1': f1, 'ambiguous_abstentions': ambiguous_abstentions,
-            'ambiguous_missing_followup': manual_missed, 'details': rows,
+            'ambiguous_missing_followup': manual_missed,
+            'safe_manual_review_cases': safe_manual, 'recommendation_conflicts': recommendation_conflicts, 'details': rows,
             'limits': 'Finding matching measures this synthetic corpus only; severity, reasoning quality and test execution require separate review.'}
 
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('observations');p.add_argument('--manifest', default=str(ROOT / 'tests/expected/corpus.json'))
+    p.add_argument('--strict', action='store_true', help='fail on mismatches, missing ambiguity follow-up, safe-case noise or contradictory PR verdicts; saved observations only')
     args = p.parse_args(argv)
     try:
         result = score(securepr.load_json(securepr.read_external(args.manifest)),
                        securepr.load_json(securepr.read_external(args.observations)))
         print(json.dumps(result, indent=2, ensure_ascii=True, allow_nan=False))
-        return 0
+        failures = ('false_positives', 'false_negatives', 'ambiguous_missing_followup', 'safe_manual_review_cases', 'recommendation_conflicts')
+        return 1 if args.strict and any(result[key] for key in failures) else 0
     except (securepr.Rejected, OSError, TypeError, KeyError) as exc:
         message = str(exc) if isinstance(exc, securepr.Rejected) else 'invalid evaluation artifact'
         print(json.dumps({'error': message}), file=sys.stderr)
